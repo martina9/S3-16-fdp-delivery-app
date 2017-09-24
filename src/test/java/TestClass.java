@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 
     @RunWith(SpringRunner.class)
-    @SpringBootTest({"myCustomArgs.customArg1=testValue"})
     public class TestClass {
 
         @Test
