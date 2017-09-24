@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: "API Service"
+  # RabbitMQ properties
+  rabbitmq:
+    host: localhost
+    listener:
+        default-requeue-rejected: false
+endpoints:
+  enabled: true
+  sensitive: false
+
+info:
+  java:
+    source: "${java.version}"
+
+logging:
+  level:
+    root: INFO
+
+management:
+  info:
+    build:
+      enabled: true
+    git:
+      mode: full
+
+server:
+  context-path: /delivery
+  port: 8085
+  address: localhost
+
