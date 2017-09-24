@@ -65,7 +65,7 @@ public class ProductRestaurantService implements IProductRestaurantService {
             logger.info(String.valueOf(e));
         }
 
-        List<ProductRestaurantDto> restaurantsList = restaurantsMap.get("productRestaurants");
+        List<ProductRestaurantDto> restaurantsList = restaurantsMap.get("productRestaurant");
 
         if (logger.isDebugEnabled()) {
             logger.debug("List of {} locations received...", restaurantsList.size());

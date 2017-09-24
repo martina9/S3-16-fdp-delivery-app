@@ -45,10 +45,10 @@ public class ProductRestaurantController {
      * @see    ResponseEntity
      */
 
-    @RequestMapping(value = "/products/restaurant/{idRestaurant}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<ProductRestaurantDto>>> getProductsByRestaurantId(@PathVariable("idRestaurant") int idRestaurant) {
+    @RequestMapping(value = "/products/restaurant1/{idRestaurant}", method = RequestMethod.GET)
+    public ResponseEntity<List<ProductRestaurantDto>> getProductsByRestaurantId(@PathVariable("idRestaurant") int idRestaurant) {
         List<ProductRestaurantDto> productRestaurantDto = productRestaurantService.getProductsByRestaurant(idRestaurant);
-        return new ResponseEntity<>(Collections.singletonMap("restaurants", productRestaurantDto), HttpStatus.OK);
+        return new ResponseEntity<>(productRestaurantDto, HttpStatus.OK);
     }
 
     /**
@@ -60,9 +60,9 @@ public class ProductRestaurantController {
      */
 
     @RequestMapping(value = "/products/restaurant/{restaurantCode}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<ProductRestaurantDto>>> getProductsByRestaurantCode(@PathVariable("restaurantCode") String restaurantCode) {
+    public ResponseEntity<List<ProductRestaurantDto>> getProductsByRestaurantCode(@PathVariable("restaurantCode") String restaurantCode) {
         List<ProductRestaurantDto> productRestaurantDto = productRestaurantService.getProductByRestaurantCode(restaurantCode);
-        return new ResponseEntity<>(Collections.singletonMap("restaurants", productRestaurantDto), HttpStatus.OK);
+        return new ResponseEntity<>(productRestaurantDto, HttpStatus.OK);
     }
 
     /**
