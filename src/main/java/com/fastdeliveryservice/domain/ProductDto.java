@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author  mGabellini
@@ -12,10 +13,12 @@ import java.io.Serializable;
 public class ProductDto implements Serializable {
     private int Id;
 
+    private List<IngredientDto> ingredients;
+
     private String name;
 
-    @JsonIgnore
-    private String ingredients;
+//    @JsonIgnore
+//    private String ingredients;
 
     private String code ;
 
@@ -23,10 +26,19 @@ public class ProductDto implements Serializable {
 
     private CategoryDto category;
 
+    public List<IngredientDto> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<IngredientDto> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     /**
      * Returns an void from setId.
      *
      * @param  id
+
      */
 
     public void setId(int id) {
@@ -87,18 +99,6 @@ public class ProductDto implements Serializable {
      * @param  ingredients
      */
 
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    /**
-     * Returns an string from getIngredients.
-     *
-     */
-    @JsonIgnore
-    public String getIngredients() {
-        return ingredients;
-    }
 
     /**
      * Returns an void from setCode.

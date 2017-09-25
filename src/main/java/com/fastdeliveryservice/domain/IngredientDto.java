@@ -9,10 +9,6 @@ import java.util.Collection;
 
 public class IngredientDto {
 
-    public IngredientDto()
-    {
-        productRestourants=new ArrayList<>();
-    }
     public String getCode() {
         return code;
     }
@@ -22,25 +18,25 @@ public class IngredientDto {
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     private String code ;
+    private String name;
+    private String id;
 
-    private String Id;
-
-
-    private CategoryDto category;
-
-    private Collection<ProductRestaurantDto> productRestourants;
-
-
-    public CategoryDto getCategory() {
-        return category;
-    }
-    public void setCategory(CategoryDto category) {
-        this.category = category;
-    }
 
 }
 

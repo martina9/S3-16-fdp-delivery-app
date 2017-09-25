@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author  mGabellini
@@ -60,9 +58,21 @@ public class ProductRestaurantController {
      */
 
     @RequestMapping(value = "/products/restaurant/{restaurantCode}", method = RequestMethod.GET)
-    public ResponseEntity<List<ProductRestaurantDto>> getProductsByRestaurantCode(@PathVariable("restaurantCode") String restaurantCode) {
-        List<ProductRestaurantDto> productRestaurantDto = productRestaurantService.getProductByRestaurantCode(restaurantCode);
-        return new ResponseEntity<>(productRestaurantDto, HttpStatus.OK);
+    public ResponseEntity<List<ProductRestaurantViewModel>> getProductsByRestaurantCode(@PathVariable("restaurantCode") String restaurantCode) {
+        List<ProductRestaurantDto> productRestaurantDtoList = productRestaurantService.getProductByRestaurantCode(restaurantCode);
+        List<ProductRestaurantViewModel> viewModels = new ArrayList<>();
+        for (ProductRestaurantDto productRestaurantDto: productRestaurantDtoList){
+            ProductRestaurantViewModel viewModel = new ProductRestaurantViewModel();
+            viewModel.setName(productRestaurantDto.getName());
+            viewModel.setId(productRestaurantDto.getId());
+            viewModel.setPrice(productRestaurantDto.getPrice());
+            viewModel.setRestaurantId(productRestaurantDto.getRestaurant().getId());
+            viewModel.setProductId(productRestaurantDto.getProduct().getId());
+            viewModel.setIngredients(productRestaurantDto.getProduct().getIngredients().stream().map(x->x.getName()).collect(Collectors.toList()));
+            viewModels.add(viewModel);
+        }
+
+        return new ResponseEntity<>(viewModels, HttpStatus.OK);
     }
 
     /**
