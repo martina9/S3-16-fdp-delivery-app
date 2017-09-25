@@ -13,6 +13,6 @@ public interface IProductRestaurantService {
     List<ProductRestaurantDto> getProductsByRestaurant(int idRestaurant);
     ProductRestaurantDto getProductRestaurantById(int id);
     Integer add(ProductRestaurantDto productRestaurantDto);
-    boolean update(ProductRestaurantDto productRestaurantDto);
-    boolean delete(int id);
+    int update(ProductRestaurantDto productRestaurantDto);
+    int delete(int id);
 }

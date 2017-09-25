@@ -1,6 +1,5 @@
 package com.fastdeliveryservice.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
@@ -11,7 +10,7 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDto implements Serializable {
-    private int Id;
+    private int id;
 
     private List<IngredientDto> ingredients;
 
@@ -42,7 +41,7 @@ public class ProductDto implements Serializable {
      */
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     /**
@@ -51,7 +50,7 @@ public class ProductDto implements Serializable {
      */
 
     public int getId() {
-        return Id;
+        return id;
     }
 
 

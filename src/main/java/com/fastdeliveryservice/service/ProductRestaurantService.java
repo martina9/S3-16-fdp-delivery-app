@@ -132,24 +132,24 @@ public class ProductRestaurantService implements IProductRestaurantService {
     }
 
     @Override
-    public synchronized boolean update(ProductRestaurantDto productRestaurantDto) {
-        boolean updated = (boolean) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.UpdateProductRestaurant", productRestaurantDto);
+    public synchronized int update(ProductRestaurantDto productRestaurantDto) {
+        int updatedId = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.UpdateProductRestaurant", productRestaurantDto);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Request Update Product Restaurant received...", updated);
+            logger.debug("Request Update Product Restaurant received...", updatedId);
         }
 
-        return updated;
+        return updatedId;
     }
 
     @Override
-    public boolean delete(int id) {
-        boolean deleted = (boolean) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.DeleteProductRestaurant", id);
+    public synchronized int delete(int id) {
+        int deletedId = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.DeleteProductRestaurant", id);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Request Delete Product Restaurant received...", deleted);
+            logger.debug("Request Delete Product Restaurant received...", deletedId);
         }
 
-        return deleted;
+        return deletedId;
     }
 }

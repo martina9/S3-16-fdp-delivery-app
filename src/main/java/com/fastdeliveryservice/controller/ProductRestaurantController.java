@@ -120,25 +120,33 @@ public class ProductRestaurantController {
      */
 
     @RequestMapping(value = "/products", method = RequestMethod.POST)
-    public ResponseEntity<Integer> add(@RequestBody ProductRestaurantViewModel productRestaurant, UriComponentsBuilder builder) {
+    public ResponseEntity<Integer> add(@RequestBody ProductRestaurantViewModel productRestaurant) {
 
-        ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
-        productRestaurantDto.setId(productRestaurant.getId());
-        productRestaurantDto.setName(productRestaurant.getName());
-        productRestaurantDto.setPrice(productRestaurant.getPrice());
-        productRestaurantDto.setQuantity(productRestaurant.getQuantity());
-        productRestaurantDto.setPrice(productRestaurant.getPrice());
-        RestaurantDto restaurantDto = new RestaurantDto();
-        restaurantDto.setId(productRestaurant.getRestaurantId());
-        productRestaurantDto.setRestaurant(restaurantDto);
+        try
+        {
+            ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
+            productRestaurantDto.setId(productRestaurant.getId());
+            productRestaurantDto.setName(productRestaurant.getName());
+            productRestaurantDto.setPrice(productRestaurant.getPrice());
+            productRestaurantDto.setQuantity(productRestaurant.getQuantity());
+            productRestaurantDto.setPrice(productRestaurant.getPrice());
+            RestaurantDto restaurantDto = new RestaurantDto();
+            restaurantDto.setId(productRestaurant.getRestaurantId());
+            productRestaurantDto.setRestaurant(restaurantDto);
 
-        ProductDto productDto = new ProductDto();
-        productDto.setId(productRestaurant.getProductId());
-        productRestaurantDto.setProduct(productDto);
+            ProductDto productDto = new ProductDto();
+            productDto.setId(productRestaurant.getProductId());
+            productRestaurantDto.setProduct(productDto);
 
-        Integer productId = productRestaurantService.add(productRestaurantDto);
+            Integer productId = productRestaurantService.add(productRestaurantDto);
 
-        return new ResponseEntity<Integer>(productId, HttpStatus.CREATED);
+            return new ResponseEntity<Integer>(productId, HttpStatus.CREATED);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     /**
@@ -150,24 +158,32 @@ public class ProductRestaurantController {
 
     @RequestMapping(value = "/products", method = RequestMethod.PUT)
     public ResponseEntity<Void> update(@RequestBody ProductRestaurantViewModel productRestaurant) {
-        ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
+        try
+        {
+            ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
 
-        productRestaurantDto.setId(productRestaurant.getId());
-        productRestaurantDto.setName(productRestaurant.getName());
-        productRestaurantDto.setPrice(productRestaurant.getPrice());
-        productRestaurantDto.setQuantity(productRestaurant.getQuantity());
-        productRestaurantDto.setPrice(productRestaurant.getPrice());
-        RestaurantDto restaurantDto = new RestaurantDto();
-        restaurantDto.setId(productRestaurant.getRestaurantId());
-        productRestaurantDto.setRestaurant(restaurantDto);
+            productRestaurantDto.setId(productRestaurant.getId());
+            productRestaurantDto.setName(productRestaurant.getName());
+            productRestaurantDto.setPrice(productRestaurant.getPrice());
+            productRestaurantDto.setQuantity(productRestaurant.getQuantity());
+            productRestaurantDto.setPrice(productRestaurant.getPrice());
+            RestaurantDto restaurantDto = new RestaurantDto();
+            restaurantDto.setId(productRestaurant.getRestaurantId());
+            productRestaurantDto.setRestaurant(restaurantDto);
 
-        ProductDto productDto = new ProductDto();
-        productDto.setId(productRestaurant.getProductId());
-        productRestaurantDto.setProduct(productDto);
+            ProductDto productDto = new ProductDto();
+            productDto.setId(productRestaurant.getProductId());
+            productRestaurantDto.setProduct(productDto);
 
-        productRestaurantService.update(productRestaurantDto);
+            productRestaurantService.update(productRestaurantDto);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     /**
@@ -178,13 +194,15 @@ public class ProductRestaurantController {
      */
 
     @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable("Id") int id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
 
-        boolean deleted = productRestaurantService.delete(id);
-        if(deleted) {
+        try
+        {
+            int deletedId = productRestaurantService.delete(id);
             return ResponseEntity.noContent().build();
         }
-        else {
+        catch (Exception e)
+        {
             return ResponseEntity.notFound().build();
         }
     }
