@@ -1,5 +1,7 @@
 package com.fastdeliveryservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * @author  mGabellini
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDto implements Serializable {
 
     public List<ProductRestaurantDto> getProductRestaurants() {
@@ -37,11 +39,49 @@ public class OrderDto implements Serializable {
 
     private List<ProductRestaurantDto> productRestaurants;
 
-    private double vatPrice ;
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     private String deliveryType;
 
-    private double netPrice;
+    private String city;
+
+    private String phoneNumber;
+
+    public String email;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    private double amount;
 
     private Date ConfirmationDate ;
 
@@ -53,20 +93,12 @@ public class OrderDto implements Serializable {
         Id = id;
     }
 
-    public double getVatPrice() {
-        return vatPrice;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setVatPrice(double vatPrice) {
-        this.vatPrice = vatPrice;
-    }
-
-    public double getNetPrice() {
-        return netPrice;
-    }
-
-    public void setNetPrice(double netPrice) {
-        this.netPrice = netPrice;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     public Date getConfirmationDate() {

@@ -26,8 +26,9 @@ public class DeliveryServiceConfig {
 
     @Bean
     public DirectExchange directExchange() {
-        return new DirectExchange("deliveryService.rpc");
+        return new DirectExchange("easy_net_q_rpc");
     }
+
 
     /* Product Restaurant*/
 
@@ -209,7 +210,7 @@ public class DeliveryServiceConfig {
 
     @Bean
     public Queue QueueOrderList() {
-        return new Queue("FDP.DeliveryMessageService:Request.OrderList");
+        return new Queue("FDP.OrderService.DirectoryMessage:Request.OrderList");
     }
 
     @Bean
@@ -229,7 +230,7 @@ public class DeliveryServiceConfig {
 
     @Bean
     public Binding bindingOrderList(DirectExchange exchange, @Qualifier("QueueOrderList") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.OrderList");
+        return BindingBuilder.bind(queue).to(exchange).with("FDP.OrderService.DirectoryMessage:Request.OrderList");
     }
 
     @Bean

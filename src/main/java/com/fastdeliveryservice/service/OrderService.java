@@ -13,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,16 @@ public class OrderService {
         this.directExchange = directExchange;
     }
 
+
+    private class OrderList implements Serializable
+    {
+        public OrderList()
+        {
+            UserId= 1;
+        }
+        public int UserId;
+    }
+
     /**
      * Produces message request containing userId
      *
@@ -49,10 +60,19 @@ public class OrderService {
     @SuppressWarnings("unchecked")
     public List<OrderDto> getOrderByUserId(int userId) {
 
+        OrderList orderList = new OrderList();
+        ObjectMapper mapperObj = new ObjectMapper();
+
+        try {
+            // get Employee object as a json string
+            String jsonStr = mapperObj.writeValueAsString(orderList);
+            System.out.println(jsonStr);
+
+
         //Should be Done Sanity Check
         logger.debug("Sending RPC request message for list of orders...");
 
-        String orders = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.OrderList", userId);
+        String orders = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.DirectoryMessage:Request.OrderList", jsonStr);
 
         TypeReference<Map<String, List<OrderDto>>> mapType = new TypeReference<Map<String, List<OrderDto>>>() {};
 
@@ -60,20 +80,24 @@ public class OrderService {
         objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
         Map<String, List<OrderDto>> orderMap = new HashMap<>();
 
-
         try {
             orderMap = objectMapper.readValue(orders, mapType);
         } catch (IOException e) {
             logger.info(String.valueOf(e));
         }
 
-        List<OrderDto> orderList = orderMap.get("orders");
+        List<OrderDto> orderLists = orderMap.get("Items");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("List of {} locations received...", orderList.size());
+            logger.debug("List of {} locations received...", orderLists.size());
         }
 
-        return orderList;
+        return orderLists;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

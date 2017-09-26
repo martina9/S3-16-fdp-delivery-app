@@ -27,7 +27,7 @@ public class OrderController {
             this.orderService = orderService;
     }
 
-    @RequestMapping(value = "/orders/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/orders/user/{userId}", method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<OrderViewModel>>> getOrdersByUserIdRpc(@PathVariable("userId") int userId){
 
         List<OrderDto> results = orderService.getOrderByUserId(userId);
@@ -43,7 +43,7 @@ public class OrderController {
             }
 
         }
-        return new ResponseEntity<>(Collections.singletonMap("orders", result), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("Items", result), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/orders/{Id}", method = RequestMethod.GET)

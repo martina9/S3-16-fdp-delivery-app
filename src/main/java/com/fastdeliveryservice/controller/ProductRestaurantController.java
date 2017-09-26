@@ -84,16 +84,14 @@ public class ProductRestaurantController {
      */
 
     @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, ProductRestaurantDto>> getProductRestaurantById(@PathVariable("id") int id){
+    public ResponseEntity<ProductRestaurantDto> getProductRestaurantById(@PathVariable("id") int id){
 
         ProductRestaurantDto productRestaurantDto = productRestaurantService.getProductRestaurantById(id);
         if(productRestaurantDto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         else {
-            Map<String, ProductRestaurantDto> result = new HashMap<>();
-            result.put("productRestaurant", productRestaurantDto);
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(productRestaurantDto);
         }
     }
 
@@ -114,7 +112,6 @@ public class ProductRestaurantController {
      * Returns an ResponseEntity for call request API addProduct.
      *
      * @param  productRestaurant for ProductViewModel
-     * @param  builder for UriComponentsBuilder
      * @return the ResponseEntity from Api called
      * @see    ResponseEntity
      */
