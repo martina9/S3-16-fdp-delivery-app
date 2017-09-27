@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.*;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
@@ -264,17 +266,16 @@ public class DeliveryServiceConfig  implements RabbitListenerConfigurer {
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
-        MessageProperties messageProperties = new MessageProperties();
-        messageProperties.setType("type");
-        messageProperties.setHeader("test","test");
         return rabbitTemplate;
     }
 
     @Bean
-    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+    public CustomJackson2JsonMessageConverter producerJackson2MessageConverter() {
         CustomDefaultJackson2JavaTypeMapper mapper = new CustomDefaultJackson2JavaTypeMapper();
-        Jackson2JsonMessageConverter json = new Jackson2JsonMessageConverter();
+
+        CustomJackson2JsonMessageConverter json = new CustomJackson2JsonMessageConverter();
         json.setJavaTypeMapper(mapper);
+
         return json;
     }
 
@@ -300,5 +301,27 @@ public class DeliveryServiceConfig  implements RabbitListenerConfigurer {
     public void configureRabbitListeners(final RabbitListenerEndpointRegistrar registrar) {
         registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
     }
+
+//    @Bean
+//    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+//        SimpleMessageListenerContainer container =  new SimpleMessageListenerContainer(connectionFactory);
+//        container.setAfterReceivePostProcessors();
+//        container.setQueueNames("foo");
+//        container.setConcurrentConsumers(2);
+//        MessageConverter messageConverter = new MessageConverter() {
+//            @Override
+//            public Object fromMessage(org.springframework.messaging.Message<?> message, Class<?> targetClass) {
+//               message.getPayload().
+//            }
+//
+//            @Override
+//            public Message<?> toMessage(Object payload, MessageHeaders headers) {
+//                return null;
+//            }
+//        }
+//        container.setMessageConverter();
+//        // ...
+//        return container;
+//    }
 
 }

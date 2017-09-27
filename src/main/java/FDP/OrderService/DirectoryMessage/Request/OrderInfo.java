@@ -1,4 +1,4 @@
-package com.fastdeliveryservice.service;
+package FDP.OrderService.DirectoryMessage.Request;
 
 import java.io.Serializable;
 
@@ -24,6 +24,7 @@ public class OrderInfo implements Serializable {
     {
         this.Id = id;
     }
+
 
     public int Id;
 

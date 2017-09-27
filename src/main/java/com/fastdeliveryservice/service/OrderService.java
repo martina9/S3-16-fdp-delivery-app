@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
+import FDP.OrderService.DirectoryMessage.Request.*;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -61,19 +61,19 @@ public class OrderService {
     @SuppressWarnings("unchecked")
     public List<OrderDto> getOrderByUserId(int userId) {
 
-        OrderList orderList = new OrderList();
+        OrderInfo info = new OrderInfo(1);
         ObjectMapper mapperObj = new ObjectMapper();
 
         try {
             // get Employee object as a json string
-            String jsonStr = mapperObj.writeValueAsString(orderList);
+            String jsonStr = mapperObj.writeValueAsString("");
             System.out.println(jsonStr);
 
 
         //Should be Done Sanity Check
         logger.debug("Sending RPC request message for list of orders...");
 
-        String orders = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.DirectoryMessage:Request.OrderList", jsonStr);
+        String orders = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.DirectoryMessage:Request.OrderList", info);
 
         TypeReference<Map<String, List<OrderDto>>> mapType = new TypeReference<Map<String, List<OrderDto>>>() {};
 
