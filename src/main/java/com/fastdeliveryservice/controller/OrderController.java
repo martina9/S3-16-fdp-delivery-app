@@ -93,12 +93,7 @@ public class OrderController {
         headers.setLocation(builder.path("/orders/{id}").buildAndExpand(orderdto.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
-
-   /* @PutMapping("article")
-    public ResponseEntity<Article> updateArticle(@RequestBody Article article) {
-        articleService.updateArticle(article);
-        return new ResponseEntity<Article>(article, HttpStatus.OK);
-    }*/
+ 
     @RequestMapping(value = "/orders", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteAllOrders() {
 

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -111,7 +112,9 @@ public class OrderService {
     public OrderDto getOrderById(int id) {
         logger.debug("Sending RPC request message for getting order...");
 
-        String order = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.Order", id);
+        OrderInfo orderInfo = new OrderInfo(1);
+
+        String order = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.DirectoryMessage:Request.OrderInfo", orderInfo);
 
         TypeReference<Map<String, OrderDto>> mapType = new TypeReference<Map<String, OrderDto>>() {
         };
@@ -161,4 +164,6 @@ public class OrderService {
 
         return resultOrderId;
     }
+
+
 }

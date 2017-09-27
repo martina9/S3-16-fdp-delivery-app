@@ -27,6 +27,6 @@ management:
 
 server:
   context-path: /delivery
-  port: 8085
+  port: 8089
   address: localhost
 
