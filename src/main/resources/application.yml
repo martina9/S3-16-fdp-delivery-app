@@ -6,6 +6,7 @@ spring:
     host: localhost
     listener:
         default-requeue-rejected: false
+
 endpoints:
   enabled: true
   sensitive: false
@@ -26,7 +27,7 @@ management:
       mode: full
 
 server:
-  context-path: /delivery
+  context-path: /FastDeliveryPizza
   port: 8089
   address: localhost
 
