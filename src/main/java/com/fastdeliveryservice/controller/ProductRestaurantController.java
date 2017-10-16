@@ -1,26 +1,24 @@
 package com.fastdeliveryservice.controller;
 
-import com.fastdeliveryservice.domain.ProductDto;
-import com.fastdeliveryservice.domain.ProductRestaurantDto;
-import com.fastdeliveryservice.domain.RestaurantDto;
+import FDP.ProductService.MessageDirectory.Response.ProductRestaurantList;
 import com.fastdeliveryservice.service.ProductRestaurantService;
-
 import com.fastdeliveryservice.viewModel.ProductRestaurantViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.fastdeliveryservice.utility.Mapper.convertList;
 
 /**
  * @author  mGabellini
  */
 
 @RestController
+@RequestMapping("/api")
 public class ProductRestaurantController {
     private ProductRestaurantService productRestaurantService;
 
@@ -43,39 +41,16 @@ public class ProductRestaurantController {
      * @see    ResponseEntity
      */
 
-    @RequestMapping(value = "/products/restaurant1/{idRestaurant}", method = RequestMethod.GET)
-    public ResponseEntity<List<ProductRestaurantDto>> getProductsByRestaurantId(@PathVariable("idRestaurant") int idRestaurant) {
-        List<ProductRestaurantDto> productRestaurantDto = productRestaurantService.getProductsByRestaurant(idRestaurant);
-        return new ResponseEntity<>(productRestaurantDto, HttpStatus.OK);
-    }
+    @RequestMapping(value = "/products/restaurant/{idRestaurant}", method = RequestMethod.GET)
+    public ResponseEntity<List<ProductRestaurantViewModel>> getProductsByRestaurantId(@PathVariable("idRestaurant") int idRestaurant) {
 
-    /**
-     * Returns an ResponseEntity for call request API getProductsByRestaurantId.
-     *
-     * @param  restaurantCode from Api
-     * @return the ResponseEntity from Api called
-     * @see    ResponseEntity
-     */
-
-    @RequestMapping(value = "/products/restaurant/{restaurantCode}", method = RequestMethod.GET)
-    public ResponseEntity<List<ProductRestaurantViewModel>> getProductsByRestaurantCode(@PathVariable("restaurantCode") String restaurantCode) {
-        List<ProductRestaurantDto> productRestaurantDtoList = productRestaurantService.getProductByRestaurantCode(restaurantCode);
-        List<ProductRestaurantViewModel> viewModels = new ArrayList<>();
-        for (ProductRestaurantDto productRestaurantDto: productRestaurantDtoList){
-            ProductRestaurantViewModel viewModel = new ProductRestaurantViewModel();
-            viewModel.setName(productRestaurantDto.getName());
-            viewModel.setId(productRestaurantDto.getId());
-            viewModel.setPrice(productRestaurantDto.getPrice());
-            viewModel.setRestaurantId(productRestaurantDto.getRestaurant().getId());
-            viewModel.setProductId(productRestaurantDto.getProduct().getId());
-            viewModel.setIngredients(productRestaurantDto.getProduct().getIngredients().stream().map(x->x.getName()).collect(Collectors.toList()));
-            viewModels.add(viewModel);
-        }
+       ProductRestaurantList productList = productRestaurantService.getProductsByRestaurantId(idRestaurant);
+        List<ProductRestaurantViewModel> viewModels  = new ArrayList<>();
+        viewModels.addAll(convertList(productList.getItems(), s -> new ProductRestaurantViewModel(s.getId(),s.getPrice(),s.getName(),s.getProductId(),s.getRestaurantId(),s.getProductName(),s.getRestaurantName(),s.getQuantity())));
 
         return new ResponseEntity<>(viewModels, HttpStatus.OK);
     }
-
-    /**
+     /**
      * Returns an ResponseEntity for call request API getProductRestaurantById.
      *
      * @param id from Api
@@ -83,30 +58,28 @@ public class ProductRestaurantController {
      * @see    ResponseEntity
      */
 
-    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ProductRestaurantDto> getProductRestaurantById(@PathVariable("id") int id){
+    @RequestMapping(value = "/products/restaurant/product/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ProductRestaurantViewModel> getProductRestaurantById(@PathVariable("id") int id){
 
-        ProductRestaurantDto productRestaurantDto = productRestaurantService.getProductRestaurantById(id);
-        if(productRestaurantDto == null) {
+        FDP.ProductService.MessageDirectory.Response.ProductRestaurantInfo productRestaurantInfo = productRestaurantService.getProductRestaurantById(id);
+        if(productRestaurantInfo == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         else {
-            return ResponseEntity.ok(productRestaurantDto);
+            ProductRestaurantViewModel viewModel = new ProductRestaurantViewModel(){{
+                setId(productRestaurantInfo.getId());
+                setName(productRestaurantInfo.getName());
+                setPrice(productRestaurantInfo.getPrice());
+                setProductId(productRestaurantInfo.getProductId());
+                setRestaurantId(productRestaurantInfo.getRestaurantId());
+                setQuantity(productRestaurantInfo.getQuantity());
+                setProductName(productRestaurantInfo.getProductName());
+                setRestaurantName(productRestaurantInfo.getRestaurantName());
+            }};
+
+            return ResponseEntity.ok(viewModel);
         }
     }
-
-    /**
-     * Returns an ResponseEntity for call request API deleteAllRestaurants.
-     *
-     * @return the ResponseEntity from Api called
-     * @see    ResponseEntity
-     */
-
-    /*@RequestMapping(value = "/products", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteAllRestaurants() {
-        // TODO:   RestaurantRepository.deleteAll();
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }*/
 
     /**
      * Returns an ResponseEntity for call request API addProduct.
@@ -116,34 +89,19 @@ public class ProductRestaurantController {
      * @see    ResponseEntity
      */
 
-    @RequestMapping(value = "/products", method = RequestMethod.POST)
-    public ResponseEntity<Integer> add(@RequestBody ProductRestaurantViewModel productRestaurant) {
+    @RequestMapping(value = "/products/restaurant/product", method = RequestMethod.POST)
+    public ResponseEntity<Void> add(@RequestBody ProductRestaurantViewModel productRestaurant) {
 
         try
         {
-            ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
-            productRestaurantDto.setId(productRestaurant.getId());
-            productRestaurantDto.setName(productRestaurant.getName());
-            productRestaurantDto.setPrice(productRestaurant.getPrice());
-            productRestaurantDto.setQuantity(productRestaurant.getQuantity());
-            productRestaurantDto.setPrice(productRestaurant.getPrice());
-            RestaurantDto restaurantDto = new RestaurantDto();
-            restaurantDto.setId(productRestaurant.getRestaurantId());
-            productRestaurantDto.setRestaurant(restaurantDto);
+            productRestaurantService.add(productRestaurant.getName(),productRestaurant.getRestaurantId(),productRestaurant.getPrice(),productRestaurant.getProductId());
 
-            ProductDto productDto = new ProductDto();
-            productDto.setId(productRestaurant.getProductId());
-            productRestaurantDto.setProduct(productDto);
-
-            Integer productId = productRestaurantService.add(productRestaurantDto);
-
-            return new ResponseEntity<Integer>(productId, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (Exception e)
         {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     /**
@@ -153,26 +111,11 @@ public class ProductRestaurantController {
      * @see    ResponseEntity
      */
 
-    @RequestMapping(value = "/products", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody ProductRestaurantViewModel productRestaurant) {
+    @RequestMapping(value = "/products/restaurant/product/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> update(@PathVariable("id") int id , @RequestBody ProductRestaurantViewModel productRestaurant) {
         try
         {
-            ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
-
-            productRestaurantDto.setId(productRestaurant.getId());
-            productRestaurantDto.setName(productRestaurant.getName());
-            productRestaurantDto.setPrice(productRestaurant.getPrice());
-            productRestaurantDto.setQuantity(productRestaurant.getQuantity());
-            productRestaurantDto.setPrice(productRestaurant.getPrice());
-            RestaurantDto restaurantDto = new RestaurantDto();
-            restaurantDto.setId(productRestaurant.getRestaurantId());
-            productRestaurantDto.setRestaurant(restaurantDto);
-
-            ProductDto productDto = new ProductDto();
-            productDto.setId(productRestaurant.getProductId());
-            productRestaurantDto.setProduct(productDto);
-
-            productRestaurantService.update(productRestaurantDto);
+            productRestaurantService.update(id,productRestaurant.getName(),productRestaurant.getRestaurantId(),productRestaurant.getPrice(),productRestaurant.getProductId());
 
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -190,7 +133,7 @@ public class ProductRestaurantController {
      * @see    ResponseEntity
      */
 
-    @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/products/restaurant/product/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
 
         try
