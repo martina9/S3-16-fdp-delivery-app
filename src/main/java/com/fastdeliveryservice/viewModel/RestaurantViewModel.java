@@ -1,29 +1,28 @@
 package com.fastdeliveryservice.viewModel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by Martina Gabellini
  */
 
 public class RestaurantViewModel {
     private int Id;
-
     private String code;
     private String name;
     private String city;
+
+    public RestaurantViewModel(int id, String code, String name, String city, String street, String zipCode, String phoneNumber) {
+        Id = id;
+        this.code = code;
+        this.name = name;
+        this.city = city;
+        this.street = street;
+        this.zipCode = zipCode;
+        this.phoneNumber = phoneNumber;
+    }
+
     private String street;
     private String zipCode;
-
-    private List<Integer> productRestaurants;
-
-    public RestaurantViewModel() {
-        productRestaurants = new ArrayList<>();
-    }
+    private String phoneNumber;
 
     public String getCity() {
         return city;
@@ -47,14 +46,15 @@ public class RestaurantViewModel {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+
     }
 
-    public Collection<Integer> getProductRestaurants() {
-        return productRestaurants;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setProductRestaurants(List<Integer> productRestaurants) {
-        this.productRestaurants = productRestaurants;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getCode() {

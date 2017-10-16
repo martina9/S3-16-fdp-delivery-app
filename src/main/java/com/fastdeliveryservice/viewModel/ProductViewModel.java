@@ -9,14 +9,44 @@ import java.util.List;
 
 public class ProductViewModel {
     private int id;
-
     private String name;
-    private String ingredients;
+    private String code;
+    private int categoryId;
+    private String categoryName;
 
-    private double price;
+    public ProductViewModel(){}
 
-    private List<OrderViewModel> orders;
-    private SellerViewModel seller;
+    public ProductViewModel(int id, String name, String code, int categoryId,String categoryName) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public int getId() {
         return id;
@@ -24,22 +54,6 @@ public class ProductViewModel {
 
     public String getName() {
         return name;
-    }
-
-    public String getIngredients() {
-        return ingredients;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public SellerViewModel getSeller() {
-        return seller;
-    }
-
-    public List<OrderViewModel> getOrders() {
-        return orders;
     }
 
     public void setId(int id) {
@@ -50,19 +64,4 @@ public class ProductViewModel {
         this.name = name;
     }
 
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setSeller(SellerViewModel seller) {
-        this.seller = seller;
-    }
-
-    public void setOrders(List<OrderViewModel> orders) {
-        this.orders = orders;
-    }
 }
