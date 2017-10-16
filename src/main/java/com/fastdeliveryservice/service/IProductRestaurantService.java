@@ -4,15 +4,13 @@ package com.fastdeliveryservice.service;
  * Created by Martina
  */
 
-import com.fastdeliveryservice.domain.ProductRestaurantDto;
-
-import java.util.List;
+import FDP.ProductService.MessageDirectory.Response.*;
 
 public interface IProductRestaurantService {
 
-    List<ProductRestaurantDto> getProductsByRestaurant(int idRestaurant);
-    ProductRestaurantDto getProductRestaurantById(int id);
-    Integer add(ProductRestaurantDto productRestaurantDto);
-    int update(ProductRestaurantDto productRestaurantDto);
+    ProductRestaurantList getProductsByRestaurantId(int idRestaurant);
+    ProductRestaurantInfo getProductRestaurantById(int id);
+    int add(String name, int restaurantId, double price, int productId);
+    int update(int id , String name, int restaurantId, double price, int productId);
     int delete(int id);
 }

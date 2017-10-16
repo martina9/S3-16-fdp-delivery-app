@@ -1,9 +1,9 @@
 package com.fastdeliveryservice.service;
 
-import com.fastdeliveryservice.domain.ProductRestaurantDto;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import FDP.ProductService.MessageDirectory.Request.AddProductRestaurant;
+import FDP.ProductService.MessageDirectory.Request.DeleteProductRestaurant;
+import FDP.ProductService.MessageDirectory.Request.ProductRestaurantList;
+import FDP.ProductService.MessageDirectory.Request.UpdateProductRestaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.DirectExchange;
@@ -11,11 +11,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Martina Gabellini
@@ -48,108 +43,81 @@ public class ProductRestaurantService implements IProductRestaurantService {
      * @return List of locations
      */
 
-    public List<ProductRestaurantDto> getProductByRestaurantCode(String restaurantCode) {
+    public FDP.ProductService.MessageDirectory.Response.ProductRestaurantList getProductsByRestaurantId(int restaurantId) {
+        logger.debug("Sending RPC request message for getting order...");
 
-        String restaurants = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.ProductRestaurantByRestaurantCode", restaurantCode);
-
-        TypeReference<Map<String, List<ProductRestaurantDto>>> mapType = new TypeReference<Map<String, List<ProductRestaurantDto>>>() { };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        Map<String, List<ProductRestaurantDto>> restaurantsMap = new HashMap<>();
-
-        try {
-            restaurantsMap = objectMapper.readValue(restaurants, mapType);
-        }
-        catch (IOException e) {
-            logger.info(String.valueOf(e));
-        }
-
-        List<ProductRestaurantDto> restaurantsList = restaurantsMap.get("productRestaurant");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("List of {} locations received...", restaurantsList.size());
-        }
-
-        return restaurantsList;
+        ProductRestaurantList request = new ProductRestaurantList();
+        request.setRestaurantId(restaurantId);
+        FDP.ProductService.MessageDirectory.Response.ProductRestaurantList productRestaurantList = (FDP.ProductService.MessageDirectory.Response.ProductRestaurantList) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.ProductRestaurantList", request);
+        return productRestaurantList;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<ProductRestaurantDto> getProductsByRestaurant(int restaurantId) {
 
-        String restaurants = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.ProductRestaurantByRestaurantId", restaurantId);
+    /**
+     * Produces message request containing product id
+     *
+     * @param id
+     * @return Product by Id
+     */
 
-        TypeReference<Map<String, List<ProductRestaurantDto>>> mapType = new TypeReference<Map<String, List<ProductRestaurantDto>>>() { };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        Map<String, List<ProductRestaurantDto>> restaurantsMap = new HashMap<>();
-
-        try {
-            restaurantsMap = objectMapper.readValue(restaurants, mapType);
-        }
-        catch (IOException e) {
-            logger.info(String.valueOf(e));
-        }
-
-        List<ProductRestaurantDto> restaurantsList = restaurantsMap.get("productRestaurants");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("List of {} locations received...", restaurantsList.size());
-        }
-
-        return restaurantsList;
+    public FDP.ProductService.MessageDirectory.Response.ProductRestaurantInfo getProductRestaurantById(int id) {
+        logger.debug("Sending RPC request message for getting order...");
+        FDP.ProductService.MessageDirectory.Request.ProductRestaurantInfo info = new FDP.ProductService.MessageDirectory.Request.ProductRestaurantInfo();
+        info.setId(id);
+        FDP.ProductService.MessageDirectory.Response.ProductRestaurantInfo productInfo = ( FDP.ProductService.MessageDirectory.Response.ProductRestaurantInfo) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.ProductRestaurantInfo",info);
+        return productInfo;
     }
 
-    @Override
-    public ProductRestaurantDto getProductRestaurantById(int id) {
-        String productRestaurant = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.ProductRestaurant", id);
+    public synchronized int add(String name, int restaurantId, double price, int productId){
+        logger.debug("Sending RPC request message for getting order...");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        objectMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        AddProductRestaurant addProductRestaurant = new AddProductRestaurant();
+        addProductRestaurant.setName(name);
+        addProductRestaurant.setPrice(price);
+        addProductRestaurant.setProductId(productId);
+        addProductRestaurant.setRestaurantId(restaurantId);
 
-        ProductRestaurantDto productRestaurantDto = null;
-        try {
-            productRestaurantDto = objectMapper.readValue(productRestaurant, ProductRestaurantDto.class);
-         }
-        catch (IOException e) {
-            logger.info(String.valueOf(e));
-        }
-
-        return productRestaurantDto;
-    }
-
-    @Override
-    public synchronized Integer add(ProductRestaurantDto productRestaurantDto){
-        Integer added = (Integer) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.AddProductRestaurant", productRestaurantDto);
+        FDP.ProductService.MessageDirectory.Response.AddProductRestaurant resultProduct = (FDP.ProductService.MessageDirectory.Response.AddProductRestaurant) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.AddProductRestaurant", addProductRestaurant);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Request Add Product Restaurant received...", added);
+            logger.debug("Product received...", resultProduct.getId());
         }
 
-        return added;
+        return resultProduct.getId();
     }
 
-    @Override
-    public synchronized int update(ProductRestaurantDto productRestaurantDto) {
-        int updatedId = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.UpdateProductRestaurant", productRestaurantDto);
+
+    public synchronized int update(int id , String name, int restaurantId, double price, int productId){
+        logger.debug("Sending RPC request message for getting order...");
+
+
+        UpdateProductRestaurant updateProductRestaurant = new UpdateProductRestaurant();
+        updateProductRestaurant.setId(id);
+        updateProductRestaurant.setName(name);
+        updateProductRestaurant.setPrice(price);
+        updateProductRestaurant.setProductId(productId);
+        updateProductRestaurant.setRestaurantId(restaurantId);
+
+        FDP.ProductService.MessageDirectory.Response.UpdateProductRestaurant resultProduct = (FDP.ProductService.MessageDirectory.Response.UpdateProductRestaurant) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.UpdateProductRestaurant", updateProductRestaurant);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Request Update Product Restaurant received...", updatedId);
+            logger.debug("Product received...", resultProduct.getId());
         }
 
-        return updatedId;
+        return resultProduct.getId();
     }
 
-    @Override
-    public synchronized int delete(int id) {
-        int deletedId = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.DeleteProductRestaurant", id);
+    public synchronized int delete(int id){
+        logger.debug("Sending RPC request message for getting order...");
+
+        DeleteProductRestaurant request = new DeleteProductRestaurant();
+        request.setId(id);
+        FDP.ProductService.MessageDirectory.Response.DeleteProductRestaurant resultProduct = (FDP.ProductService.MessageDirectory.Response.DeleteProductRestaurant) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.DeleteProductRestaurant", request);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Request Delete Product Restaurant received...", deletedId);
+            logger.debug("Product received...", resultProduct.getId());
         }
 
-        return deletedId;
+        return resultProduct.getId();
     }
 }
