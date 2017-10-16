@@ -48,7 +48,10 @@ import org.springframework.util.ClassUtils;
             }
         }
 
-        String typeIdHeader = retrieveHeaderAsString(properties, getClassIdFieldName());
+        String typeIdHeader = properties.getType();
+        if(typeIdHeader == null) {
+             typeIdHeader = retrieveHeaderAsString(properties, getClassIdFieldName());
+        }
         setTypeIdHeader(typeIdHeader);
 
         if (typeIdHeader != null) {
