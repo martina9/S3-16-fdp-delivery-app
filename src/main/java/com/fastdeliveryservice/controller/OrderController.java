@@ -1,9 +1,9 @@
 package com.fastdeliveryservice.controller;
-
-import com.fastdeliveryservice.domain.OrderDto;
-import com.fastdeliveryservice.domain.ProductRestaurantDto;
+import FDP.OrderService.MessageDirectory.Response.OrderInfo;
 import com.fastdeliveryservice.service.OrderService;
+import com.fastdeliveryservice.viewModel.CategoryViewModel;
 import com.fastdeliveryservice.viewModel.OrderViewModel;
+import com.fastdeliveryservice.viewModel.ProductViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,11 +13,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 
+import static com.fastdeliveryservice.utility.Mapper.ConvertFromMessage;
+import static com.fastdeliveryservice.utility.Mapper.convertList;
+
 /**
  * Created by Martina Gabellini
  */
 
 @RestController
+@RequestMapping("/api")
 public class OrderController {
 
     private OrderService orderService;
@@ -28,72 +32,52 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/orders/user/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<OrderViewModel>>> getOrdersByUserIdRpc(@PathVariable("userId") int userId){
+    public ResponseEntity<List<OrderViewModel>> getOrdersByUserIdRpc(@PathVariable("userId") int userId){
 
-        List<OrderDto> results = orderService.getOrderByUserId(userId);
-        List<OrderViewModel> result = new ArrayList<>();
+        FDP.OrderService.MessageDirectory.Response.OrderList categoryResponse = orderService.GetOrdersList(userId,null);
+        //String deliveryType, String address, String city, String phoneNumber, String email, int userId, double amount, Date confirmationDate
+        List<OrderViewModel> viewModels  = convertList(categoryResponse.getItems(), s -> new OrderViewModel(s.getDeliveryType(),s.getAddress(),s.getCity(),s.getPhoneNumber(),s.getEmail(),s.getUserId(),s.getAmount(),s.getConfirmationDate()));
 
-        for (OrderDto orderDto : results) {
-            OrderViewModel model = new OrderViewModel();
-            model.setUserId(orderDto.getUserId());
-            model.setDeliveryType(orderDto.getDeliveryType());
-
-            for (ProductRestaurantDto productRestaurantDto: orderDto.getProductRestaurants()) {
-                model.getProducts().add(productRestaurantDto.getProduct().getId());
-            }
-
+        if(viewModels == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return new ResponseEntity<>(Collections.singletonMap("Items", result), HttpStatus.OK);
+        else {
+            return ResponseEntity.ok(viewModels);
+        }
+    }
+
+    @RequestMapping(value = "/orders/restaurant/{restaurantId}", method = RequestMethod.GET)
+    public ResponseEntity<List<OrderViewModel>> getOrdersByRestaurantRpc(@PathVariable("restaurantId") int restaurantId){
+
+        FDP.OrderService.MessageDirectory.Response.OrderList categoryResponse = orderService.GetOrdersList(null,restaurantId);
+        //String deliveryType, String address, String city, String phoneNumber, String email, int userId, double amount, Date confirmationDate
+        List<OrderViewModel> viewModels  = convertList(categoryResponse.getItems(), s -> new OrderViewModel(s.getDeliveryType(),s.getAddress(),s.getCity(),s.getPhoneNumber(),s.getEmail(),s.getUserId(),s.getAmount(),s.getConfirmationDate()));
+
+        if(viewModels == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        else {
+            return ResponseEntity.ok(viewModels);
+        }
     }
 
     @RequestMapping(value = "/orders/{Id}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, OrderViewModel>> getOrderByIdRpc(@PathVariable("Id") int id){
+    public ResponseEntity<OrderViewModel> getOrderByIdRpc(@PathVariable("Id") int id) throws Exception {
 
-        OrderDto orderDto = orderService.getOrderById(id);
+        OrderInfo orderInfo = orderService.GetOrderById(id);
+        OrderViewModel model = ConvertFromMessage(orderInfo);
 
-        Map<String, OrderViewModel> result = new HashMap<>();
-
-        OrderViewModel view = new OrderViewModel();
-        view.setUserId(orderDto.getUserId());
-        view.setDeliveryType(orderDto.getDeliveryType());
-        for (ProductRestaurantDto productRestaurantDto: orderDto.getProductRestaurants()) {
-            view.getProducts().add(productRestaurantDto.getProduct().getId());
-        }
-
-        result.put("order", view);
-
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(model);
     }
 
-    @RequestMapping(value = "/orders", method = RequestMethod.PUT)
-    public ResponseEntity<Void> updateOrder() {
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @RequestMapping(value = "/orders", method = RequestMethod.POST)
+    @RequestMapping(value = "/orders/user", method = RequestMethod.POST)
     //public ResponseEntity<Void> addOrder(@PathVariable("IdsProductRestaurant") List<Integer> idsProductRestaurant, @PathVariable("deliveryType") String deliveryType, UriComponentsBuilder builder) {
     public ResponseEntity<Void> addOrder(@RequestBody OrderViewModel order, UriComponentsBuilder builder) {
 
-        OrderDto orderdto = new OrderDto();
-
-        for (Integer id : order.getProducts()) {
-            ProductRestaurantDto productRestaurantDto = new ProductRestaurantDto();
-            productRestaurantDto.setId(id);
-            orderdto.getProductRestaurants().add(productRestaurantDto);
-        }
-        orderdto.setDeliveryType(order.getDeliveryType());
-        orderdto.setUserId(order.getUserId());
-
-        boolean flag = orderService.add(orderdto);
-        if (flag == false) {
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/orders/{id}").buildAndExpand(orderdto.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+      int id =  orderService.add(order.getUserId(),order.getAmount(),order.getConfirmationDate(), order.getDeliveryType(), order.getAddress(), order.getCity(), order.getPhoneNumber(), order.getEmail(),order.getRestaurantId());
+      return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
- 
+
     @RequestMapping(value = "/orders", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteAllOrders() {
 
