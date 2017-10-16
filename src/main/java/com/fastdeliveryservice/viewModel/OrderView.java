@@ -1,4 +1,4 @@
-package com.fastdeliveryservice.domain;
+package com.fastdeliveryservice.viewModel;
 
 import java.util.List;
 
