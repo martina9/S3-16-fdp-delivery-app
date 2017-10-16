@@ -1,22 +1,16 @@
 package com.fastdeliveryservice.service;
 
-import com.fastdeliveryservice.domain.ProductDto;
+import FDP.ProductService.MessageDirectory.Request.*;
+import FDP.ProductService.Shared.CategoryInfo;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Martina
@@ -27,11 +21,9 @@ import java.util.Map;
  */
 
 @Service
-public class ProductService implements IProductService {
+public class ProductService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private Environment environment;
 
     private RabbitTemplate rabbitTemplate;
 
@@ -39,41 +31,26 @@ public class ProductService implements IProductService {
 
 
     @Autowired
-    public ProductService(Environment environment,
+    public ProductService(
                            RabbitTemplate rabbitTemplate,
                            DirectExchange directExchange)
     {
-        this.environment = environment;
         this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
     }
 
-    @Override
-    public List<ProductDto> getAllProductsByRestaurant(int idRestaurant) {
+    public List<CategoryInfo> getAllCategories() {
+        logger.debug("Sending RPC request message for getting order...");
+ 
+        FDP.ProductService.MessageDirectory.Response.CategoryList categoryList = (FDP.ProductService.MessageDirectory.Response.CategoryList) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.CategoryList", new CategoryList());
+        return categoryList.getItems();
+    }
+
+    public List<FDP.ProductService.MessageDirectory.Response.ProductInfo> getAllProducts() {
         logger.debug("Sending RPC request message for getting order...");
 
-        String order = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.ProductList", idRestaurant);
-
-        TypeReference<Map<String, List<ProductDto>>> mapType = new TypeReference<Map<String, List<ProductDto>>>() {
-        };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        Map<String, List<ProductDto>> restaurantsMap = new HashMap<>();
-
-        try {
-            restaurantsMap = objectMapper.readValue(order, mapType);
-        } catch (IOException e) {
-            logger.info(String.valueOf(e));
-        }
-
-        List<ProductDto> productDto = restaurantsMap.get("product");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Product received...", productDto.size());
-        }
-
-        return productDto;
+        FDP.ProductService.MessageDirectory.Response.ProductList productList = (FDP.ProductService.MessageDirectory.Response.ProductList) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.ProductList", new ProductList());
+        return productList.getItems();
     }
 
     /**
@@ -82,63 +59,49 @@ public class ProductService implements IProductService {
      * @param id
      * @return Product by Id
      */
-    public ProductDto getProductById(int id) {
+
+    public FDP.ProductService.MessageDirectory.Response.ProductInfo getProductById(int id) {
+        logger.debug("Sending RPC request message for getting order...");
+        ProductInfo info = new ProductInfo();
+        info.setId(id);
+        FDP.ProductService.MessageDirectory.Response.ProductInfo productInfo = ( FDP.ProductService.MessageDirectory.Response.ProductInfo) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.Product",info);
+        return productInfo;
+    }
+
+    public synchronized FDP.ProductService.MessageDirectory.Response.AddProduct addProduct(AddProduct addProduct){
         logger.debug("Sending RPC request message for getting order...");
 
-        String order = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.Product", id);
+            FDP.ProductService.MessageDirectory.Response.AddProduct resultProduct = (FDP.ProductService.MessageDirectory.Response.AddProduct) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.AddProduct", addProduct);
 
-        TypeReference<Map<String, ProductDto>> mapType = new TypeReference<Map<String, ProductDto>>() {
-        };
+            if (logger.isDebugEnabled()) {
+                logger.debug("Product received...", resultProduct.getId());
+            }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        Map<String, ProductDto> restaurantsMap = new HashMap<>();
-
-        try {
-            restaurantsMap = objectMapper.readValue(order, mapType);
-        } catch (IOException e) {
-            logger.info(String.valueOf(e));
-        }
-
-        ProductDto productDto = restaurantsMap.get("product");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Product received...", productDto.getId());
-        }
-
-        return productDto;
+            return resultProduct;
     }
-    public synchronized int add(ProductDto productDto){
+
+    public synchronized FDP.ProductService.MessageDirectory.Response.UpdateProduct updateProduct(UpdateProduct updateProduct){
         logger.debug("Sending RPC request message for getting order...");
-        int resultProductId = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.AddProduct", productDto);
+
+        FDP.ProductService.MessageDirectory.Response.UpdateProduct resultProduct = (FDP.ProductService.MessageDirectory.Response.UpdateProduct) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.UpdateProduct", updateProduct);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Product received...", resultProductId);
+            logger.debug("Product received...", resultProduct.getId());
         }
 
-        return resultProductId;
+        return resultProduct;
     }
 
-    @SuppressWarnings("unchecked")
-    public int update(ProductDto product) {
-        logger.debug("Sending RPC request message for getting product...");
+    public synchronized FDP.ProductService.MessageDirectory.Response.DeleteProduct deleteProduct(DeleteProduct deleteProduct){
+        logger.debug("Sending RPC request message for getting order...");
 
-        int resultProductId = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.UpdateProduct", product);
+        FDP.ProductService.MessageDirectory.Response.DeleteProduct resultProduct = (FDP.ProductService.MessageDirectory.Response.DeleteProduct) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.DeleteProduct", deleteProduct);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Product received...", resultProductId);
+            logger.debug("Product received...", resultProduct.getId());
         }
 
-        return resultProductId;
+        return resultProduct;
     }
 
-    @SuppressWarnings("unchecked")
-    public int delete(int productId) {
-        int id = (int) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.DeleteProduct", productId);
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Request Delete Product received...", productId);
-        }
-        return id;
-    }
 }

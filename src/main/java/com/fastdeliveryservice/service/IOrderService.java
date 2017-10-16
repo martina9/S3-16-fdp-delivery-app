@@ -1,8 +1,6 @@
 package com.fastdeliveryservice.service;
 
-import com.fastdeliveryservice.domain.OrderDto;
-
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Martina Gabellini
@@ -10,15 +8,10 @@ import java.util.List;
 
 public interface IOrderService {
 
-    List<OrderDto> getOrderByUserId(int userId);
+    FDP.OrderService.MessageDirectory.Response.OrderList GetOrdersList(Integer userId, Integer restaurantId);
 
-    //List<Order> getProductsByRestaurant(int id);
+    FDP.OrderService.MessageDirectory.Response.OrderInfo GetOrderById(Integer orderId) throws Exception;
 
-    OrderDto getOrderById(int id);
+    int add(int userId, double amount, Date confirmationDate, String deliveryType, String address, String city, String phoneNumber, String email, int restaurantId);
 
-    boolean add(OrderDto productDto);
-
-    boolean update(OrderDto productDto);
-
-    boolean delete(OrderDto productDto);
 }

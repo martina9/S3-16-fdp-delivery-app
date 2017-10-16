@@ -1,30 +1,26 @@
 package com.fastdeliveryservice.service;
 
-import com.fastdeliveryservice.domain.OrderDto;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import FDP.OrderService.MessageDirectory.Request.OrderInfo;
+import FDP.OrderService.MessageDirectory.Response.ConfirmOrder;
+import FDP.ProductService.MessageDirectory.Request.ProductList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
-import FDP.OrderService.DirectoryMessage.Request.*;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Martina
  */
 
 @Service
-public class OrderService {
+public class OrderService implements IOrderService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -35,20 +31,10 @@ public class OrderService {
     private DirectExchange directExchange;
 
     @Autowired
-    public OrderService(Environment environment, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+    public OrderService(Environment environment,RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
         this.environment = environment;
-        this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
-    }
-
-
-    private class OrderList implements Serializable
-    {
-        public OrderList()
-        {
-            UserId= 1;
-        }
-        public int UserId;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     /**
@@ -59,110 +45,47 @@ public class OrderService {
      */
 
     @SuppressWarnings("unchecked")
-    public List<OrderDto> getOrderByUserId(int userId) {
-
-        OrderInfo info = new OrderInfo(1);
-        ObjectMapper mapperObj = new ObjectMapper();
-
-        try {
-            // get Employee object as a json string
-            String jsonStr = mapperObj.writeValueAsString("");
-            System.out.println(jsonStr);
-
-
-        //Should be Done Sanity Check
-        logger.debug("Sending RPC request message for list of orders...");
-
-        String orders = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.DirectoryMessage:Request.OrderList", info);
-
-        TypeReference<Map<String, List<OrderDto>>> mapType = new TypeReference<Map<String, List<OrderDto>>>() {};
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        Map<String, List<OrderDto>> orderMap = new HashMap<>();
-
-        try {
-            orderMap = objectMapper.readValue(orders, mapType);
-        } catch (IOException e) {
-            logger.info(String.valueOf(e));
-        }
-
-        List<OrderDto> orderLists = orderMap.get("Items");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("List of {} locations received...", orderLists.size());
-        }
-
-        return orderLists;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
+    public FDP.OrderService.MessageDirectory.Response.OrderList GetOrdersList(Integer userId, Integer restaurantId) {
+        logger.debug("Sending RPC request message for getting order...");
+        FDP.OrderService.MessageDirectory.Request.OrderList request = new FDP.OrderService.MessageDirectory.Request.OrderList();
+        request.setUserId(userId);
+        request.setRestaurantId(restaurantId);
+        FDP.OrderService.MessageDirectory.Response.OrderList productList = (FDP.OrderService.MessageDirectory.Response.OrderList) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.MessageDirectory:Request.OrderList.#", request);
+        return productList;
     }
 
     /**
      * Produces message request containing order id
      *
-     * @param id
+     * @param orderId
      * @return Order by Id
      */
 
     @SuppressWarnings("unchecked")
-    public OrderDto getOrderById(int id) {
+    public FDP.OrderService.MessageDirectory.Response.OrderInfo GetOrderById(Integer orderId) throws Exception {
         logger.debug("Sending RPC request message for getting order...");
 
-        OrderInfo orderInfo = new OrderInfo(1);
-
-        String order = (String) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.DirectoryMessage:Request.OrderInfo", orderInfo);
-
-        TypeReference<Map<String, OrderDto>> mapType = new TypeReference<Map<String, OrderDto>>() {
-        };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        Map<String, OrderDto> restaurantsMap = new HashMap<>();
-
-        try {
-            restaurantsMap = objectMapper.readValue(order, mapType);
-        } catch (IOException e) {
-            logger.info(String.valueOf(e));
+        if (orderId == null) {
+            Exception ex  = new Exception("Required Exception.GetOrderById param OrderId is missing");
+            throw ex;
         }
-
-        OrderDto orderDto = restaurantsMap.get("order");
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Order received...", orderDto.getId());
-        }
-
-        return orderDto;
+        FDP.OrderService.MessageDirectory.Request.OrderInfo request = new FDP.OrderService.MessageDirectory.Request.OrderInfo();
+        request.setId(orderId.intValue());
+        FDP.OrderService.MessageDirectory.Response.OrderInfo result = (FDP.OrderService.MessageDirectory.Response.OrderInfo) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.MessageDirectory:Request.OrderInfo", request);
+        return result;
     }
 
+    public int add(int userId, double amount, Date confirmationDate, String deliveryType, String address, String city, String phoneNumber, String email, int restaurantId) {
 
-    @SuppressWarnings("unchecked")
-    public boolean update(OrderDto order) {
-        logger.debug("Sending RPC request message for getting order...");
+        FDP.OrderService.MessageDirectory.Request.ConfirmOrder request = new FDP.OrderService.MessageDirectory.Request.ConfirmOrder(userId,amount,confirmationDate,deliveryType,address,city,phoneNumber,email,restaurantId);
 
-        boolean resultOrderId = (boolean) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.UpdateOrder", order);
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Order received...", resultOrderId);
-        }
-
-        return resultOrderId;
-    }
-
-    @SuppressWarnings("unchecked")
-    public boolean add(OrderDto order) {
-
-        logger.debug("Sending RPC request message for getting order...");
-        boolean resultOrderId = (boolean) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.DeliveryMessageService:Request.AddOrder", order);
+        ConfirmOrder result = (ConfirmOrder) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService:Request.ConfirmOrder", request);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Order received...", resultOrderId);
+            logger.debug("Order received...", result.getId());
         }
 
-        return resultOrderId;
+        return result.getId();
     }
 
 
