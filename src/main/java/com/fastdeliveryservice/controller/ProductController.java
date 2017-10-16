@@ -1,32 +1,29 @@
 package com.fastdeliveryservice.controller;
 
-import com.fastdeliveryservice.domain.ProductDto;
-
+import FDP.ProductService.MessageDirectory.Request.AddProduct;
+import FDP.ProductService.MessageDirectory.Request.DeleteProduct;
+import FDP.ProductService.MessageDirectory.Request.UpdateProduct;
 import com.fastdeliveryservice.service.ProductService;
-
+import com.fastdeliveryservice.viewModel.CategoryViewModel;
 import com.fastdeliveryservice.viewModel.ProductViewModel;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.*;
+import static com.fastdeliveryservice.utility.Mapper.ConvertFromMessage;
+import static com.fastdeliveryservice.utility.Mapper.convertList;
 
 /**
  * @author  mGabellini
  */
 
 @RestController
+@RequestMapping("/api")
 public class ProductController {
-    private ProductService productService;
 
+    private ProductService productService;
     /**
      * Constructor
      *
@@ -46,70 +43,114 @@ public class ProductController {
      * @see    ResponseEntity
      */
 
-    /*@RequestMapping(value = "/product/{Id}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, ProductViewModel>> getProductByIdRpc(@PathVariable("Id") int id){
-        ProductDto productDto = productService.getProductById(id);
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ProductViewModel> getProductByIdRpc(@PathVariable("id") int id){
 
-        Map<String, ProductViewModel> result = new HashMap<>();
+        FDP.ProductService.MessageDirectory.Response.ProductInfo productInfo = productService.getProductById(id);
 
-        ProductViewModel view = new ProductViewModel();
-        view.setId(productDto.getId());
-        view.setIngredients(productDto.getIngredients());
-        view.setName(productDto.getName());
+        ProductViewModel model = ConvertFromMessage(productInfo);
 
-        result.put("product", view);
+        return ResponseEntity.status(HttpStatus.OK).body(model);
+    }
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }*/
 
     /**
+     * Returns an ResponseEntity for call request API getProductByIdRpc.
+     *
+     *
+     * @return the ResponseEntity from Api called
+     * @see    ResponseEntity
+     */
+
+    @RequestMapping(value = "/products/", method = RequestMethod.GET)
+    public ResponseEntity<List<ProductViewModel>> getAllProductsByIdRpc(){
+        List<FDP.ProductService.MessageDirectory.Response.ProductInfo> productResponse = productService.getAllProducts();
+
+        List<ProductViewModel> viewModels   = new ArrayList<>();
+
+        viewModels.addAll(convertList(productResponse, s -> new ProductViewModel(s.getId(),s.getName(),s.getCode(),s.getCategoryId(),s.getCategoryName())));
+
+        return ResponseEntity.ok(viewModels);
+    }
+
+    /**
+     * Returns an ResponseEntity for call request API getProductByIdRpc.
+     *
+     *
+     * @return the ResponseEntity from Api called
+     * @see    ResponseEntity
+     */
+
+    @RequestMapping(value = "/products/categories", method = RequestMethod.GET)
+    public ResponseEntity<List<CategoryViewModel>> getAllCategoriesByRpc(){
+        List<FDP.ProductService.Shared.CategoryInfo> categoryResponse = productService.getAllCategories();
+
+        List<CategoryViewModel> viewModels  = convertList(categoryResponse, s -> new CategoryViewModel(s.getId(),s.getName()));
+
+        if(viewModels == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        else {
+            return ResponseEntity.ok(viewModels);
+        }
+    }
+    /*
      * Returns an ResponseEntity for call request API addProduct.
      *
      * @param  product for ProductViewModel
      * @param  builder for UriComponentsBuilder
      * @return the ResponseEntity from Api called
      * @see    ResponseEntity
-     *//*
+     */
 
     @RequestMapping(value = "/products", method = RequestMethod.POST)
     public ResponseEntity<Void> add(@RequestBody ProductViewModel product, UriComponentsBuilder builder) {
 
-        ProductDto productDto = new ProductDto();
-        productDto.setId(product.getId());
-        productDto.setName(product.getName());
-        productDto.setIngredients(product.getIngredients());
-        productDto.setPrice(product.getPrice());
+        AddProduct addProduct = new AddProduct();
+        addProduct.setName(product.getName());
+        addProduct.setCode(product.getCode());
+        addProduct.setCategoryId(product.getCategoryId());
 
-        int flag = productService.add(productDto);
+        FDP.ProductService.MessageDirectory.Response.AddProduct response = productService.addProduct(addProduct);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/product/{id}").buildAndExpand(productDto.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    *//**
+    /**
      * Returns an ResponseEntity for call request API updateProduct.
      *
      * @return the ResponseEntity from Api called
      * @see    ResponseEntity
-     *//*
+     */
 
-    @RequestMapping(value = "/products", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update() {
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody ProductViewModel product) {
+
+
+        UpdateProduct updateProduct = new UpdateProduct();
+        updateProduct.setId(id);
+        updateProduct.setName(product.getName());
+        updateProduct.setCode(product.getCode());
+        updateProduct.setCategoryId(product.getCategoryId());
+        FDP.ProductService.MessageDirectory.Response.UpdateProduct response = productService.updateProduct(updateProduct);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    *//**
+    /**
      * Returns an ResponseEntity for call request API deleteProduct.
      *
      * @return the ResponseEntity from Api called
      * @see    ResponseEntity
-     *//*
+     */
 
-    @RequestMapping(value = "/products", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete() {
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
 
-     // TODO:   OrderRepository.deleteAll();
+        DeleteProduct deleteProduct = new DeleteProduct();
+        deleteProduct.setId(id);
+        productService.deleteProduct(deleteProduct);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }*/
+    }
 }
