@@ -31,9 +31,7 @@ public class ProductService {
 
 
     @Autowired
-    public ProductService(
-                           RabbitTemplate rabbitTemplate,
-                           DirectExchange directExchange)
+    public ProductService(RabbitTemplate rabbitTemplate,DirectExchange directExchange)
     {
         this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
@@ -103,5 +101,4 @@ public class ProductService {
 
         return resultProduct;
     }
-
 }

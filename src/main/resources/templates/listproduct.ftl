@@ -25,19 +25,17 @@
 	                        </div>
 	                    </div>
 	                </div>
-
 	                <div class="row">
 	                    <div class="form-group col-md-12">
 	                        <label class="col-md-2 control-lable" for="category">Category</label>
 	                        <div class="col-md-7">
-                                <select size="6" name="category" ng-model="ctrl.product.categoryId" ng-options="category.id as category.name for category in ctrl.getAllCategories() track by category.id">
+                                <select size="6" name="category" class="dropdown" ng-model="ctrl.product.categoryId" ng-options="category.id as category.name for category in ctrl.getAllCategories() track by category.id">
                                     <option value="">--Select Category--</option>
                                    <!-- <option ng-repeat="option in ctrl.getAllCategories()" ng-value="option.id">{{option.name}}</option> -->
                                 </select>
 	                        </div>
 	                    </div>
 	                </div>
-
 	                <div class="row">
 	                    <div class="form-actions floatRight">
 	                        <input type="submit"  value="{{!ctrl.product.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">

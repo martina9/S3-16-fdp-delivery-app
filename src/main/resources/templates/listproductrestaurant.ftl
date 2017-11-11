@@ -1,62 +1,62 @@
 <div class="generic-container">
     <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading"><span class="lead">Product </span></div>
-		<div class="panel-body">
-	        <div class="formcontainer">
-	            <div class="alert alert-success" role="alert" ng-if="prctrl.successMessage">{{prctrl.successMessage}}</div>
-	            <div class="alert alert-danger" role="alert" ng-if="prctrl.errorMessage">{{prctrl.errorMessage}}</div>
-	            <form ng-submit="prctrl.submit()" name="myForm" class="form-horizontal">
-	                <input type="hidden" ng-model="prctrl.productRestaurant.id" />
-                    <input type="hidden" ng-model="prctrl.productRestaurant.restaurantId" id="restaurantId" />
-	                <div class="row">
-	                    <div class="form-group col-md-12">
-	                        <label class="col-md-2 control-lable" for="uname">Name</label>
-	                        <div class="col-md-7">
-	                            <input type="text" ng-model="prctrl.productRestaurant.name" id="uname" class="username form-control input-sm" placeholder="Enter product name" required ng-minlength="1"/>
-	                        </div>
-	                    </div>
-	                </div>
-
-	                <div class="row">
-	                    <div class="form-group col-md-12">
-	                        <label class="col-md-2 control-lable" for="price">Price</label>
-	                        <div class="col-md-7">
-	                            <input type="text" ng-model="prctrl.productRestaurant.price" id="price" class="form-control input-sm" placeholder="Enter the price." required ng-minlength="1"/>
-	                        </div>
-	                    </div>
-	                </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="quantity">Quantity</label>
-                            <div class="col-md-7">
-                                <input type="text" ng-model="prctrl.productRestaurant.quantity" id="quantity" class="form-control input-sm" placeholder="Enter the quantity." required ng-minlength="1"/>
-                            </div>
+    <!-- Default panel contents -->
+    <div class="panel-heading"><span class="lead">Product </span></div>
+    <div class="panel-body">
+        <div class="formcontainer">
+            <div class="alert alert-success" role="alert" ng-if="prctrl.successMessage">{{prctrl.successMessage}}</div>
+            <div class="alert alert-danger" role="alert" ng-if="prctrl.errorMessage">{{prctrl.errorMessage}}</div>
+            <form ng-submit="prctrl.submit()" name="myForm" class="form-horizontal">
+                <input type="hidden" ng-model="prctrl.productRestaurant.id" />
+                <input type="hidden" ng-model="prctrl.productRestaurant.restaurantId" id="restaurantId" />
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-lable" for="uname">Name</label>
+                        <div class="col-md-7">
+                            <input type="text" ng-model="prctrl.productRestaurant.name" id="uname" class="username form-control input-sm" placeholder="Enter product name" required ng-minlength="1"/>
                         </div>
                     </div>
+                </div>
 
-	                <div class="row">
-	                    <div class="form-group col-md-12">
-	                        <label class="col-md-2 control-lable" for="product">Category</label>
-	                        <div class="col-md-7">
-                                <select size="6" name="product" ng-model="prctrl.productRestaurant.productId" ng-options="product.id as product.name for product in prctrl.getAllProducts() track by product.id">
-                                    <option value="">--Select Product--</option>
-                                 </select>
-	                        </div>
-	                    </div>
-	                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-lable" for="price">Price</label>
+                        <div class="col-md-7">
+                            <input type="text" ng-model="prctrl.productRestaurant.price" id="price" class="form-control input-sm" placeholder="Enter the price." required ng-minlength="1"/>
+                        </div>
+                    </div>
+                </div>
 
-	                <div class="row">
-	                    <div class="form-actions floatRight">
-	                        <input type="submit"  value="{{!prctrl.productRestaurant.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">
-	                        <button type="button" ng-click="prctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset Form</button>
-	                    </div>
-	                </div>
-	            </form>
-    	    </div>
-		</div>	
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-lable" for="quantity">Quantity</label>
+                        <div class="col-md-7">
+                            <input type="text" ng-model="prctrl.productRestaurant.quantity" id="quantity" class="form-control input-sm" placeholder="Enter the quantity." required ng-minlength="1"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-lable" for="product">Category</label>
+                        <div class="col-md-7">
+                            <select size="6" name="product" ng-model="prctrl.productRestaurant.productId" ng-options="product.id as product.name for product in prctrl.getAllProducts() track by product.id">
+                                <option value="">--Select Product--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-actions floatRight">
+                        <input type="submit"  value="{{!prctrl.productRestaurant.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">
+                        <button type="button" ng-click="prctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset Form</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading"><span class="lead">List of Products </span></div>

@@ -28,6 +28,6 @@ management:
 
 server:
   context-path: /FastDeliveryPizza
-  port: 8089
+  port: 8088
   address: localhost
 

@@ -3,6 +3,7 @@
 angular.module('fdpApp').controller('OrderController',
     ['OrderService', '$scope',  function( OrderService, $scope) {
 
+        $scope.formData = {};
         var self = this;
         self.order = {};
         self.orders=[];
@@ -39,15 +40,16 @@ angular.module('fdpApp').controller('OrderController',
 
             angular.forEach(self.getAllProductRestaurants(), function(value, key) {
 
-                var order = {firstName:"John", lastName:"Doe", age:50, eyeColor:"blue"};
+                var order = {deliveryType:"Home", address:"Doe", city:"Pesaro", phoneNumber:"320878787" ,
+                    email:"sempre@io.it", userId:2478, restaurantId:5, amount:54.7 , confirmationDate : "2017/11/10"
+                };
+
                 angular.forEach(self.ids, function (selfValue, selfKe) {
                     if (value.id == selfValue)
                         self.userproductRestaurants.push(value);
-
                 });
-                console.log('userproductRestaurants ',  self.userproductRestaurants);
-
             });
+            console.log('userproductRestaurants ',  self.userproductRestaurants);
         }
 
         function searchProductRestaurant(restaurantId) {
@@ -69,13 +71,29 @@ angular.module('fdpApp').controller('OrderController',
         }
 
         function submit() {
-            console.log('Submitting Searching ProductRestaurant' +self.selectedRestaurant);
-            if (self.selectedRestaurant === undefined || self.selectedRestaurant  === null) {
-                console.log('you have to choose restaurant First' + self.selectedRestaurant);
-            } else {
-                searchRestaurant(self.selectedRestaurant)
-                console.log('selectedRestaurant updated' + self.selectedRestaurant);
-            }
+            console.log('selectedRestaurant',self.selectedRestaurant)
+            console.log('ids ',self.ids);
+            console.log('asdasd',$scope.formData.address)
+            angular.forEach(self.getAllProductRestaurants(), function(value, key) {
+
+                var order = {deliveryType:"Home", address:"Doe", city:"Pesaro", phoneNumber:"320878787" ,
+                    email:"sempre@io.it", userId:2478, restaurantId:5, amount:54.7 , confirmationDate : "2017/11/10"
+                };
+
+                angular.forEach(self.ids, function (selfValue, selfKe) {
+                    if (value.id == selfValue)
+                        self.userproductRestaurants.push(value);
+                });
+            });
+            console.log('userproductRestaurants ',  self.userproductRestaurants);
+
+            // console.log('Submitting Searching ProductRestaurant' +self.selectedRestaurant);
+            // if (self.selectedRestaurant === undefined || self.selectedRestaurant  === null) {
+            //     console.log('you have to choose restaurant First' + self.selectedRestaurant);
+            // } else {
+            //     searchRestaurant(self.selectedRestaurant)
+            //     console.log('selectedRestaurant updated' + self.selectedRestaurant);
+            // }
         }
 
         function createOrder(order) {

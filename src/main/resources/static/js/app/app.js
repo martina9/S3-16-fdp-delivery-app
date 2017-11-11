@@ -15,7 +15,7 @@ app.constant('urls', {
 });
 
 
-app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', 'urls', function ($stateProvider, $urlRouterProvider, urls) {
     $stateProvider
         .state('product', {
                         url: '/product',
@@ -43,7 +43,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             controller:'RestaurantController',
             controllerAs:'rctrl',
             resolve: {
-                restaurants:function ($q, ProductService) {
+                restaurants:function ($q, RestaurantService) {
                     console.log('Load all restaurants');
                     var deferred = $q.defer();
                     RestaurantService.loadAllRestaurants().then(deferred.resolve, deferred.resolve);
@@ -58,8 +58,8 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             }
         })
     // route to show our basic form (/form)
-        .state('productRestaurant', {
-            url: '/productRestaurant',
+        .state('productrestaurant', {
+            url: '/productrestaurant',
             templateUrl: 'partials/listproductrestaurant',
             controller: 'ProductRestaurantController',
             controllerAs:'prctrl',
@@ -67,7 +67,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                 productRestaurant:function ($q, ProductRestaurantService) {
                     console.log('Load all ProductRestaurant');
                     var deferred = $q.defer();
-                    ProductRestaurantService.loadAllProductRestaurants(1).then(deferred.resolve, deferred.resolve);
+                    ProductRestaurantService.loadAllProductRestaurants(urls.RESTAURANT_ID).then(deferred.resolve, deferred.resolve);
                     return deferred.promise;
                 },
                 products:function ($q, ProductRestaurantService) {
@@ -92,35 +92,14 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                 },
             }
         })
-        // nested states
-        // each of these sections will have their own view
-        // url will be nested (/form/profile)
-        .state('registration.user', {
-            url: '/user',
-            templateUrl: 'modules/registration/views/registration-user.html'
+        .state('userorder.address', {
+            url: 'partials/address',
+            templateUrl: 'partials/userorder-address'
         })
-        // nested states
-        // each of these sections will have their own view
-        // url will be nested (/form/profile)
-        .state('registration.profile', {
-            url: '/profile',
-            templateUrl: 'modules/registration/views/registration-profile.html'
-        })
-        // url will be /form/deparment
-        .state('registration.department', {
-            url: '/deparments',
-            templateUrl: 'modules/registration/views/registration-department.html'
-        })
-        .state('home', {
-            url: '/',
-            templateUrl: 'modules/home/views/home.html',
-            controller: 'HomeController'
-        })
-        .state('login', {
-            url: '/login',
-            templateUrl: 'modules/authentication/views/login.html',
-            controller: 'LoginController'
-        });
+        .state('userorder.order', {
+            url: 'partials/order',
+            templateUrl: 'partials/userorder-order'
+        }) ;
     // catch all route
     // send users to the form page
     // $urlRouterProvider.otherwise('/login');

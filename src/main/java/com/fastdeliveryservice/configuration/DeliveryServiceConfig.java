@@ -45,58 +45,10 @@ public class DeliveryServiceConfig  {
     }
 
 
-
-
-//    // You can comment all methods below and remove interface's implementation to use the default serialization / deserialization
-//    @Bean
-//    public RabbitTemplate rabbitTemplate() {
-//        final RabbitTemplate rabbitTemplate = new RabbitTemplate(rabbitConnectionFactory);
-//        rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
-//        rabbitTemplate.setExchange("easy_net_q_rpc");
-//        rabbitTemplate.setReplyQueue(replyQueue());
-//     //   rabbitTemplate.setReplyAddress("FDP.OrderService.MessageDirectory:Response.OrderInfo");
-//        return rabbitTemplate;
-//    }
-
-
-//    @Bean
-//        public SimpleMessageListenerContainer replyListenerContainer() {
-//            SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//            container.setConnectionFactory(this.rabbitConnectionFactory);
-//            container.setQueues(replyQueue());
-//            container.setMessageListener(fixedReplyQRabbitTemplate());
-//            return container;
-//        }
-
-    public static class PojoListener {
-
-        public String handleMessage(String foo) {
-            return foo.toUpperCase();
-        }
-    }
-//        @Bean
-//        public SimpleMessageListenerContainer serviceListenerContainer() {
-//            SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//            container.setConnectionFactory(this.rabbitConnectionFactory);
-//            container.setQueues(requestQueue());
-//            container.setMessageListener(new MessageListenerAdapter(new PojoListener()));
-//            return container;
-////        }
-//    @Bean
-//    public Queue requestQueue() {
-//        return new Queue("FDP.OrderService.MessageDirectory:Request.OrderInfo");
-//    }
-//
-//    @Bean
-//    public Queue replyQueue() {
-//        return new Queue("RPC:response");
-//    }
-
     @Bean
     public RabbitTemplate fixedReplyQRabbitTemplate() {
         RabbitTemplate template = new RabbitTemplate(this.rabbitConnectionFactory);
         template.setMessageConverter(producerJackson2MessageConverter());
-
         template.setReceiveTimeout(10000);
         template.setReplyTimeout(10000);
         return template;
@@ -105,7 +57,6 @@ public class DeliveryServiceConfig  {
     @Bean
     public CustomJackson2JsonMessageConverter producerJackson2MessageConverter() {
         CustomDefaultJackson2JavaTypeMapper mapper = new CustomDefaultJackson2JavaTypeMapper();
-
         CustomJackson2JsonMessageConverter json = new CustomJackson2JsonMessageConverter();
         json.setJavaTypeMapper(mapper);
 

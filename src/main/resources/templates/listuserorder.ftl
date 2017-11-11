@@ -16,7 +16,6 @@
 	                        </div>
 	                    </div>
 	                </div>
-
 	                <div class="row">
 	                    <div class="form-group col-md-12">
 	                        <label class="col-md-2 control-lable" for="code">Code</label>
@@ -25,7 +24,6 @@
 	                        </div>
 	                    </div>
 	                </div>
-
 	                <div class="row">
 	                    <div class="form-group col-md-12">
 	                        <label class="col-md-2 control-lable" for="category">Category</label>
@@ -37,7 +35,6 @@
 	                        </div>
 	                    </div>
 	                </div>
-
 	                <div class="row">
 	                    <div class="form-actions floatRight">
 	                        <input type="submit"  value="{{!ctrl.product.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">

@@ -6,7 +6,6 @@ import FDP.ProductService.MessageDirectory.Request.UpdateProduct;
 import com.fastdeliveryservice.service.ProductService;
 import com.fastdeliveryservice.viewModel.CategoryViewModel;
 import com.fastdeliveryservice.viewModel.ProductViewModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.*;
 import static com.fastdeliveryservice.utility.Mapper.ConvertFromMessage;
 import static com.fastdeliveryservice.utility.Mapper.convertList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author  mGabellini
@@ -24,6 +25,7 @@ import static com.fastdeliveryservice.utility.Mapper.convertList;
 public class ProductController {
 
     private ProductService productService;
+
     /**
      * Constructor
      *
@@ -52,7 +54,6 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.OK).body(model);
     }
-
 
     /**
      * Returns an ResponseEntity for call request API getProductByIdRpc.

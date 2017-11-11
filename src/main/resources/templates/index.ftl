@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en" ng-app="fdpApp">
     <head>
         <title>${title}</title>
         <link href="css/bootstrap.css" rel="stylesheet"/>
         <link href="css/app.css" rel="stylesheet"/>
+        <link href="css/multistep.css" rel="stylesheet"/>
         <link href="css/angular-material.css" rel="stylesheet" >
     </head>
 
@@ -12,6 +12,7 @@
         body {
             margin: 0;
             font-family: 'Lato', sans-serif;
+            background-color: orange;
         }
 
         .overlay {
@@ -73,7 +74,6 @@
             margin: 0 auto;
         }
     </style>
-    <body>
 
     <body>
     <div class="example3">
@@ -89,14 +89,14 @@
                 </div>
                 <div id="navbar3" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="/#!/registration" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-user"></span></a>
+                        <#--<li class="dropdown">-->
+                            <#--<a href="/FastDeliveryPizza/#/restaurant" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-user"></span></a>-->
+                        <#--</li>-->
+                        <li class="dropdown2">
+                            <a href="/FastDeliveryPizza/#/product" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-lock"></span></a>
                         </li>
                         <li class="dropdown2">
-                            <a href="/#!/login" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-log-in"></span></a>
-                        </li>
-                        <li class="dropdown2">
-                            <a href="chat.html" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-comment"></span></a>
+                            <a href="/FastDeliveryPizza/#/userorderpartials/address" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-shopping-cart"></span></a>
                         </li>
                     </ul>
                 </div>
@@ -107,6 +107,7 @@
     </div>
     <div class="jumbotron">
         <div class="container">
+            <#--<img src="images/logo.png" allign="center">-->
                 <!--<div ng-view></div>-->
                 <div ui-view></div>
         </div>
@@ -127,4 +128,3 @@
         <script src="js/app/modules/order/OrderController.js"></script>
     </body>
 </html>
-

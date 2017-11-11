@@ -89,10 +89,10 @@
                             <a href="/#!/registration" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-user"></span></a>
                         </li>
                         <li class="dropdown2">
-                            <a href="/#!/login" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-log-in"></span></a>
+                            <a href="/#!/login" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-lock"></span></a>
                         </li>
                         <li class="dropdown2">
-                            <a href="chat.html" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-comment"></span></a>
+                            <a href="chat.html" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-shopping-cart"></span></a>
                         </li>
                     </ul>
                 </div>
