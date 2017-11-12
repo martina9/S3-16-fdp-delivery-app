@@ -3,32 +3,21 @@ package com.fastdeliveryservice.configuration;
 import org.springframework.amqp.core.*;
 
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.DefaultClassMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-/**
- * @author  mGabellini
- */
-
 @Configuration
 @EnableRabbit
 @EnableScheduling
 public class DeliveryServiceConfig  {
-
-
 
     @Autowired
     public ConnectionFactory rabbitConnectionFactory;
@@ -80,31 +69,4 @@ public class DeliveryServiceConfig  {
         factory.setMessageConverter(consumerJackson2MessageConverter());
         return factory;
     }
-//
-//    @Override
-//    public void configureRabbitListeners(final RabbitListenerEndpointRegistrar registrar) {
-//        registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
-//    }
-
-//    @Bean
-//    public SimpleMessageListenerContainer replyListenerContainer() {
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//        container.setConnectionFactory(this.rabbitConnectionFactory);
-//        container.setQueues(replyQueue());
-//        container.setMessageListener(fixedReplyQRabbitTemplate());
-//        return container;
-//    }
-//
-//    @Bean
-//    public SimpleMessageListenerContainer serviceListenerContainer() {
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//        container.setConnectionFactory(this.rabbitConnectionFactory);
-//        container.setQueues(requestQueue());
-//        container.setMessageListener(new MessageListenerAdapter(new PojoListener()));
-//        return container;
-//    }
-
-
-
-
 }

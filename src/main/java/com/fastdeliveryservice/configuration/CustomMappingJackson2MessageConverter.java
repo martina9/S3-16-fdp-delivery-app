@@ -9,9 +9,6 @@ import org.springframework.messaging.converter.MessageConversionException;
 
 import java.io.IOException;
 
-/**
- * Created by Martina on 27/09/2017.
- */
     @Configuration
     public class CustomMappingJackson2MessageConverter extends MappingJackson2MessageConverter {
 

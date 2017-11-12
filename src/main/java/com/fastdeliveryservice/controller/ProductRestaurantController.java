@@ -1,7 +1,7 @@
 package com.fastdeliveryservice.controller;
 
 import FDP.ProductService.MessageDirectory.Response.ProductRestaurantList;
-import com.fastdeliveryservice.service.ProductRestaurantService;
+import com.fastdeliveryservice.service.ProductRestaurantServiceImpl;
 import com.fastdeliveryservice.viewModel.ProductRestaurantViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,23 +12,23 @@ import java.util.List;
 import static com.fastdeliveryservice.utility.Mapper.convertList;
 
 /**
- * @author  mGabellini
+ * @author  mFéliz
  */
 
 @RestController
 @RequestMapping("/api")
 public class ProductRestaurantController {
-    private ProductRestaurantService productRestaurantService;
+    private ProductRestaurantServiceImpl productRestaurantServiceImpl;
 
     /**
      * Constructor
      *
-     * @param productRestaurantService (required) to process API request for productRestaurant
+     * @param productRestaurantServiceImpl (required) to process API request for productRestaurant
      */
 
     @Autowired
-    public ProductRestaurantController( ProductRestaurantService productRestaurantService) {
-            this.productRestaurantService = productRestaurantService;
+    public ProductRestaurantController(ProductRestaurantServiceImpl productRestaurantServiceImpl) {
+            this.productRestaurantServiceImpl = productRestaurantServiceImpl;
     }
 
     /**
@@ -42,7 +42,7 @@ public class ProductRestaurantController {
     @RequestMapping(value = "/products/restaurant/{idRestaurant}", method = RequestMethod.GET)
     public ResponseEntity<List<ProductRestaurantViewModel>> getProductsByRestaurantId(@PathVariable("idRestaurant") int idRestaurant) {
 
-       ProductRestaurantList productList = productRestaurantService.getProductsByRestaurantId(idRestaurant);
+       ProductRestaurantList productList = productRestaurantServiceImpl.getProductsByRestaurantId(idRestaurant);
         List<ProductRestaurantViewModel> viewModels  = new ArrayList<>();
         viewModels.addAll(convertList(productList.getItems(), s -> new ProductRestaurantViewModel(s.getId(),s.getPrice(),s.getName(),s.getProductId(),s.getRestaurantId(),s.getProductName(),s.getRestaurantName(),s.getQuantity())));
 
@@ -59,7 +59,7 @@ public class ProductRestaurantController {
     @RequestMapping(value = "/products/restaurant/product/{id}", method = RequestMethod.GET)
     public ResponseEntity<ProductRestaurantViewModel> getProductRestaurantById(@PathVariable("id") int id){
 
-        FDP.ProductService.MessageDirectory.Response.ProductRestaurantInfo productRestaurantInfo = productRestaurantService.getProductRestaurantById(id);
+        FDP.ProductService.MessageDirectory.Response.ProductRestaurantInfo productRestaurantInfo = productRestaurantServiceImpl.getProductRestaurantById(id);
         if(productRestaurantInfo == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -92,7 +92,7 @@ public class ProductRestaurantController {
 
         try
         {
-            productRestaurantService.add(productRestaurant.getName(),productRestaurant.getRestaurantId(),productRestaurant.getPrice(),productRestaurant.getProductId());
+            productRestaurantServiceImpl.add(productRestaurant.getName(),productRestaurant.getRestaurantId(),productRestaurant.getPrice(),productRestaurant.getProductId());
 
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
@@ -113,7 +113,7 @@ public class ProductRestaurantController {
     public ResponseEntity<Void> update(@PathVariable("id") int id , @RequestBody ProductRestaurantViewModel productRestaurant) {
         try
         {
-            productRestaurantService.update(id,productRestaurant.getName(),productRestaurant.getRestaurantId(),productRestaurant.getPrice(),productRestaurant.getProductId());
+            productRestaurantServiceImpl.update(id,productRestaurant.getName(),productRestaurant.getRestaurantId(),productRestaurant.getPrice(),productRestaurant.getProductId());
 
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -136,7 +136,7 @@ public class ProductRestaurantController {
 
         try
         {
-            int deletedId = productRestaurantService.delete(id);
+            int deletedId = productRestaurantServiceImpl.delete(id);
             return ResponseEntity.noContent().build();
         }
         catch (Exception e)

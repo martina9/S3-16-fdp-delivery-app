@@ -2,27 +2,23 @@ package junit;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Assert;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.springframework.test.context.junit4.SpringRunner;
-
 import java.io.IOException;
 
+import org.junit.Test;
+
 /**
- * @author  mCastillo
+ * @author  mFéliz
  */
 
-@RunWith(SpringRunner.class)
-public class ProductsClass {
+
+public class ProductRestaurantTest {
     @Test
-    public void getProductsById() throws IOException {
+    public void getProductRestaurantById() throws IOException {
 
         // Given
         HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
@@ -35,7 +31,7 @@ public class ProductsClass {
     }
 
     @Test
-    public void getAllProductsByRestaurantId() throws IOException {
+    public void getAllProductsRestaurantByRestaurantId() throws IOException {
 
         // Given
         HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
@@ -48,7 +44,7 @@ public class ProductsClass {
     }
 
     @Test
-    public void getAllProductsByRestaurantCode() throws IOException {
+    public void getAllProductsRestaurantByRestaurantCode() throws IOException {
 
         // Given
         HttpUriRequest request = new HttpGet( "https://api.github.com/users/");

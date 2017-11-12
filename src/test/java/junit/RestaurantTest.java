@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 
 @RunWith(SpringRunner.class)
-public class RestaurantClass {
+public class RestaurantTest {
 
     @Test
     public void getLocationsByAddress() throws IOException {

@@ -1,7 +1,7 @@
 package com.fastdeliveryservice.controller;
 
 import FDP.ProductService.MessageDirectory.Response.RestaurantList;
-import com.fastdeliveryservice.service.RestaurantService;
+import com.fastdeliveryservice.service.RestaurantServiceImpl;
 import com.fastdeliveryservice.viewModel.RestaurantViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,24 +17,24 @@ import java.util.List;
 import static com.fastdeliveryservice.utility.Mapper.convertList;
 
 /**
- * @author  mGabellini
+ * @author  sKahatib
  */
 
 @RestController
 @RequestMapping("/api")
 public class RestaurantController {
-    private RestaurantService restaurantService;
+    private RestaurantServiceImpl restaurantServiceImpl;
 
     //Injection parameters
     @Autowired
-    public RestaurantController( RestaurantService restaurantService) {
-            this.restaurantService = restaurantService;
+    public RestaurantController(RestaurantServiceImpl restaurantServiceImpl) {
+            this.restaurantServiceImpl = restaurantServiceImpl;
     }
 
     @RequestMapping(value = "/restaurants/{city}", method = RequestMethod.GET)
     public ResponseEntity<List<RestaurantViewModel> > getRestaurantByCity(@PathVariable("city") String city) {
 
-        RestaurantList response = restaurantService.getRestaurantList(city,null);
+        RestaurantList response = restaurantServiceImpl.getRestaurantList(city,null);
 
         List<RestaurantViewModel> viewModels = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class RestaurantController {
     @RequestMapping(value = "/restaurants/", method = RequestMethod.GET)
     public ResponseEntity<List<RestaurantViewModel> > getAllRestaurants() {
 
-        RestaurantList response = restaurantService.getRestaurantList(null,null);
+        RestaurantList response = restaurantServiceImpl.getRestaurantList(null,null);
 
         List<RestaurantViewModel> viewModels = new ArrayList<>();
 

@@ -18,5 +18,4 @@ public class AppController {
     String partialHandler(@PathVariable("page") final String page) {
         return page;
     }
-
 }
