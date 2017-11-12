@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 
 @RunWith(SpringRunner.class)
-public class ProductsClass {
+public class ProductsTest {
 
      private final String  BASE_URL = "http://localhost:8089/FastDeliveryPizza/api/";
      private final String  PRODUCT_SERVICE_API =  "http://localhost:8089/FastDeliveryPizza/api/products/";
