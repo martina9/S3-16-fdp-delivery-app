@@ -1,4 +1,4 @@
-<div class="generic-container">
+<div class="generic-container" style="margin-left: 100px;">
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading"><span class="lead">Product </span></div>

@@ -107,8 +107,7 @@
     </div>
     <div class="jumbotron">
         <div class="container">
-            <#--<img src="images/logo.png" allign="center">-->
-                <!--<div ng-view></div>-->
+            <img src="images/logo.jpg" allign="center" style="width: 200px;height: 200px;  display: block; margin: 0 auto; margin-top:-40px;">
                 <div ui-view></div>
         </div>
     </div>

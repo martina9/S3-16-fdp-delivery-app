@@ -30,7 +30,7 @@ public class Application {
     @EventListener({ApplicationReadyEvent.class})
     void applicationReadyEvent() {
         System.out.println("Application started ... launching browser now");
-        Browse("http://localhost:8088/FastDeliveryPizza");
+        Browse("http://localhost:8089/FastDeliveryPizza");
     }
 
     public static void Browse(String url) {

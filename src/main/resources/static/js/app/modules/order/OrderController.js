@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('fdpApp').controller('OrderController',
-    ['OrderService', '$scope',  function( OrderService, $scope) {
+    ['OrderService', '$scope', 'urls',  function( OrderService, $scope , urls) {
 
-        $scope.formData = {};
         var self = this;
+        self.getAllProductRestaurantsLive = [];
         self.order = {};
         self.orders=[];
         self.ids ={};
@@ -12,6 +12,7 @@ angular.module('fdpApp').controller('OrderController',
         self.userproductRestaurants = [];
         self.submit = submit;
         self.confirmOrder = confirmOrder;
+        self.searchProductRestaurantLive = searchProductRestaurantLive;
         self.getAllRestaurants = getAllRestaurants;
         self.searchProductRestaurant = searchProductRestaurant;
         self.getAllUserOrders = getAllUserOrders;
@@ -22,7 +23,6 @@ angular.module('fdpApp').controller('OrderController',
         self.removeOrder = removeOrder;
         self.editOrder = editOrder;
         self.reset = reset;
-
         self.successMessage = '';
         self.errorMessage = '';
         self.done = false;
@@ -37,19 +37,55 @@ angular.module('fdpApp').controller('OrderController',
         function confirmOrder(){
             console.log('selectedRestaurant',self.selectedRestaurant)
             console.log('ids ',self.ids);
+            var list = self.getAllProductRestaurants();
 
-            angular.forEach(self.getAllProductRestaurants(), function(value, key) {
+            var products = [];
+            var orderToConfirm = {
+                deliveryType:self.order.deliveryType,
+                address:self.order.address,
+                city:self.order.city,
+                phoneNumber:self.order.phoneNumber ,
+                email :self.order.email,
+                userId:urls.USER_ID,
+                restaurantId:self.selectedRestaurant,
+                confirmationDate:new Date(),
+                products: new Array()
+            };
 
-                var order = {deliveryType:"Home", address:"Doe", city:"Pesaro", phoneNumber:"320878787" ,
-                    email:"sempre@io.it", userId:2478, restaurantId:5, amount:54.7 , confirmationDate : "2017/11/10"
-                };
-
+            angular.forEach(list, function(value, key) {
                 angular.forEach(self.ids, function (selfValue, selfKe) {
-                    if (value.id == selfValue)
-                        self.userproductRestaurants.push(value);
+                    if (value.id == selfValue) {
+                        var product = [{quantity:value.quantity},{productId:value.productId}];
+                        orderToConfirm.products.push(product);
+                    }
                 });
             });
+
+            self.createOrder(orderToConfirm);
+            console.log('orderToConfirm',orderToConfirm);
             console.log('userproductRestaurants ',  self.userproductRestaurants);
+        }
+
+        function searchProductRestaurantLive(restaurantId) {
+            console.log('userproductRestaurants request');
+            if(restaurantId === undefined || restaurantId == null) {
+                self.getAllProductRestaurantsLive = [];
+                return;
+            }
+            OrderService.loadAllProductRestaurants(restaurantId).then(
+                function (response) {
+                    console.log('productRestaurants Loaded successfully');
+                    self.successMessage = 'productRestaurants Loaded successfully';
+                    self.errorMessage = '';
+                    self.done = true;
+                    self.getAllProductRestaurantsLive = response.data;
+                },
+                function (errResponse) {
+                    console.error('Error while productRestaurants Loaded');
+                    self.errorMessage = 'Error while productRestaurants Loaded: ' + errResponse.data.errorMessage;
+                    self.successMessage='';
+                }
+            );
         }
 
         function searchProductRestaurant(restaurantId) {
@@ -67,33 +103,10 @@ angular.module('fdpApp').controller('OrderController',
                     self.successMessage='';
                 }
             );
-            //return OrderService.getAllProductRestaurants();
         }
 
         function submit() {
-            console.log('selectedRestaurant',self.selectedRestaurant)
-            console.log('ids ',self.ids);
-            console.log('asdasd',$scope.formData.address)
-            angular.forEach(self.getAllProductRestaurants(), function(value, key) {
 
-                var order = {deliveryType:"Home", address:"Doe", city:"Pesaro", phoneNumber:"320878787" ,
-                    email:"sempre@io.it", userId:2478, restaurantId:5, amount:54.7 , confirmationDate : "2017/11/10"
-                };
-
-                angular.forEach(self.ids, function (selfValue, selfKe) {
-                    if (value.id == selfValue)
-                        self.userproductRestaurants.push(value);
-                });
-            });
-            console.log('userproductRestaurants ',  self.userproductRestaurants);
-
-            // console.log('Submitting Searching ProductRestaurant' +self.selectedRestaurant);
-            // if (self.selectedRestaurant === undefined || self.selectedRestaurant  === null) {
-            //     console.log('you have to choose restaurant First' + self.selectedRestaurant);
-            // } else {
-            //     searchRestaurant(self.selectedRestaurant)
-            //     console.log('selectedRestaurant updated' + self.selectedRestaurant);
-            // }
         }
 
         function createOrder(order) {
@@ -116,7 +129,6 @@ angular.module('fdpApp').controller('OrderController',
                 );
         }
 
-
         function updateOrder(order, id){
             console.log('About to update order');
             OrderService.updateOrder(order, id)
@@ -135,7 +147,6 @@ angular.module('fdpApp').controller('OrderController',
                     }
                 );
         }
-
 
         function removeOrder(id){
             console.log('About to remove Order with id '+id);

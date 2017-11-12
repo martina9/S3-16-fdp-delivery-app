@@ -71,8 +71,7 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/orders/user", method = RequestMethod.POST)
-    //public ResponseEntity<Void> addOrder(@PathVariable("IdsProductRestaurant") List<Integer> idsProductRestaurant, @PathVariable("deliveryType") String deliveryType, UriComponentsBuilder builder) {
-    public ResponseEntity<Void> addOrder(@RequestBody OrderViewModel order, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> addOrder(@RequestBody OrderViewModel order) {
 
       int id =  orderService.add(order.getUserId(),order.getAmount(),order.getConfirmationDate(), order.getDeliveryType(), order.getAddress(), order.getCity(), order.getPhoneNumber(), order.getEmail(),order.getRestaurantId());
       return new ResponseEntity<Void>(HttpStatus.CREATED);

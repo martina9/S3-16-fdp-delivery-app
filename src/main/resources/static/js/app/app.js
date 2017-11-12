@@ -10,7 +10,8 @@ app.constant('urls', {
     RESTAURANT_ORDER_SERVICE_API : 'http://localhost:8089/FastDeliveryPizza/api/orders/restaurant/',
     PRODUCT_RESTAURANT_PRODUCT_SERVICE_API : 'http://localhost:8089/FastDeliveryPizza/api/products/restaurant/product/',
     PRODUCT_RESTAURANT_SERVICE_API : 'http://localhost:8089/FastDeliveryPizza/api/products/restaurant/',
-    RESTAURANT_ID : 1
+    RESTAURANT_ID : 1,
+    USER_ID : 1
     // RESTAURANT_SERVICE_API : 'http://localhost:8089/FastDeliveryPizza/api/restaurants/',
 });
 
@@ -89,7 +90,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'urls', function ($stateProv
                     var deferred = $q.defer();
                     OrderService.loadAllRestaurants().then(deferred.resolve, deferred.resolve);
                     return deferred.promise;
-                },
+                }
             }
         })
         .state('userorder.address', {

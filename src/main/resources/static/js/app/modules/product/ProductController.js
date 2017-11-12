@@ -88,7 +88,6 @@ angular.module('fdpApp').controller('ProductController',
                 );
         }
 
-
         function getAllProducts(){
             return ProductService.getAllProducts();
         }
