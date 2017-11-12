@@ -7,19 +7,19 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Assert;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author  mAkbarimoghadam
  */
 
 @RunWith(SpringRunner.class)
-public class OrdersClass {
+public class OrdersTest {
 
     @Test
     public void getOrders() throws IOException {

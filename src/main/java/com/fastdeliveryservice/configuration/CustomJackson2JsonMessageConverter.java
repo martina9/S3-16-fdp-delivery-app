@@ -14,9 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created by Martina on 27/09/2017.
- */
+
 public class CustomJackson2JsonMessageConverter extends Jackson2JsonMessageConverter {
 
     public static final String DEFAULT_CHARSET = "UTF-8";
