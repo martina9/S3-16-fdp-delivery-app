@@ -57,7 +57,7 @@ public class ProductServiceImpl {
     public FDP.ProductService.MessageDirectory.Response.ProductInfo getProductById(int id) {
         ProductInfo info = new ProductInfo();
         info.setId(id);
-        FDP.ProductService.MessageDirectory.Response.ProductInfo productInfo = ( FDP.ProductService.MessageDirectory.Response.ProductInfo) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.Product",info);
+        FDP.ProductService.MessageDirectory.Response.ProductInfo productInfo = ( FDP.ProductService.MessageDirectory.Response.ProductInfo) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.ProductService.MessageDirectory:Request.ProductInfo",info);
         return productInfo;
     }
 
