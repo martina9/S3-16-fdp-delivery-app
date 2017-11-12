@@ -1,7 +1,7 @@
-<div class="generic-container">
+<div class="generic-container" style="margin-left: 100px;">
     <div class="panel panel-default">
     <!-- Default panel contents -->
-    <div class="panel-heading"><span class="lead">Product </span></div>
+    <div class="panel-heading"><span class="lead">Product Restaurant</span></div>
     <div class="panel-body">
         <div class="formcontainer">
             <div class="alert alert-success" role="alert" ng-if="prctrl.successMessage">{{prctrl.successMessage}}</div>
