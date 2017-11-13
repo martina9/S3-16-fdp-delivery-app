@@ -6,11 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by Martina
  */
 public final class  SerializerUtils {
+
+
 
     public static <T> String serializeToJson(Class<T> typeKey) {
         ObjectMapper mapper = new ObjectMapper();

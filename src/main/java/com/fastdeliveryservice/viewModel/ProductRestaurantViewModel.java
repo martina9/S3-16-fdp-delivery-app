@@ -10,15 +10,44 @@ public class ProductRestaurantViewModel {
 
     private int id;
 
+    public ProductRestaurantViewModel() {
+    }
+
+    public ProductRestaurantViewModel(int id, double price, String name, int productId, int restaurantId, String productName, String restaurantName, int quantity) {
+        this.id = id;
+        this.price = price;
+        this.name = name;
+        this.productId = productId;
+        this.restaurantId = restaurantId;
+        this.productName = productName;
+        this.restaurantName = restaurantName;
+        this.quantity = quantity;
+    }
+
     private double price;
-
     private String name;
-
     private int productId;
     private int restaurantId;
-
+    private String productName;
+    private String restaurantName;
     private int quantity;
     private List<String> ingredients;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
 
     public int getId() {
         return id;

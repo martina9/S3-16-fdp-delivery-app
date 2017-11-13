@@ -1,8 +1,8 @@
 package com.fastdeliveryservice.controller;
 
-import com.fastdeliveryservice.domain.RestaurantDto;
-import com.fastdeliveryservice.service.RestaurantService;
-import com.fastdeliveryservice.viewModel.SellerViewModel;
+import FDP.ProductService.MessageDirectory.Response.RestaurantList;
+import com.fastdeliveryservice.service.RestaurantServiceImpl;
+import com.fastdeliveryservice.viewModel.RestaurantViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,43 +14,48 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fastdeliveryservice.utility.Mapper.convertList;
+
 /**
- * @author  mGabellini
+ * @author  sKahatib
  */
 
 @RestController
+@RequestMapping("/api")
 public class RestaurantController {
-    private RestaurantService restaurantService;
+    private RestaurantServiceImpl restaurantServiceImpl;
 
     //Injection parameters
     @Autowired
-    public RestaurantController( RestaurantService restaurantService) {
-            this.restaurantService = restaurantService;
+    public RestaurantController(RestaurantServiceImpl restaurantServiceImpl) {
+            this.restaurantServiceImpl = restaurantServiceImpl;
     }
 
     @RequestMapping(value = "/restaurants/{city}", method = RequestMethod.GET)
-    public ResponseEntity<List<SellerViewModel>> getRestaurantByCityRpc(@PathVariable("city") String city) {
+    public ResponseEntity<List<RestaurantViewModel> > getRestaurantByCity(@PathVariable("city") String city) {
 
-        //use service Manager for Message With Rabbit
-        List<RestaurantDto> results = restaurantService.getRestaurantMessageRpc(city);
+        RestaurantList response = restaurantServiceImpl.getRestaurantList(city,null);
 
-        //Mapping Result into View Model
-        List<SellerViewModel> viewModels = new ArrayList<>();
+        List<RestaurantViewModel> viewModels = new ArrayList<>();
 
-        for (RestaurantDto dto : results) {
-            SellerViewModel model = new SellerViewModel();
-            model.setIdSeller(dto.getId());
-            model.setCode(dto.getCode());
-            model.setName(dto.getName());
-            model.setEmail(dto.getAddressRestaurants().stream().findFirst().get().getEmail());
-            model.setPhoneNumber(dto.getAddressRestaurants().stream().findFirst().get().getPhoneNumber());
-            model.setCity(dto.getAddressRestaurants().stream().findFirst().get().getCity());
-            model.setStreet(dto.getAddressRestaurants().stream().findFirst().get().getStreet());
-            model.setZipCode(dto.getAddressRestaurants().stream().findFirst().get().getZipCode());
-            model.setCode(dto.getAddressRestaurants().stream().findFirst().get().getCode());
-            viewModels.add(model);
-        }
-        return new ResponseEntity<>(viewModels, HttpStatus.OK);
+        viewModels.addAll(convertList(response.getItems(),
+                s -> new RestaurantViewModel(s.getId(),s.getCode(),s.getName(),s.getCity(),s.getAddress(),s.getZipCode(),s.getPhoneNumber())));
+
+            return ResponseEntity.ok(viewModels);
+    }
+
+
+    @RequestMapping(value = "/restaurants/", method = RequestMethod.GET)
+    public ResponseEntity<List<RestaurantViewModel> > getAllRestaurants() {
+
+        RestaurantList response = restaurantServiceImpl.getRestaurantList(null,null);
+
+        List<RestaurantViewModel> viewModels = new ArrayList<>();
+
+        viewModels.addAll(convertList(response.getItems(),
+                s -> new RestaurantViewModel(s.getId(),s.getCode(),s.getName(),s.getCity(),s.getAddress(),s.getZipCode(),s.getPhoneNumber())));
+
+        return ResponseEntity.ok(viewModels);
     }
 
     @RequestMapping(value = "/restaurants/drop", method = RequestMethod.POST)

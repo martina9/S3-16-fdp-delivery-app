@@ -1,22 +1,26 @@
 package com.fastdeliveryservice.configuration;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.*;
 
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-/**
- * @author  mGabellini
- */
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-public class DeliveryServiceConfig {
+@EnableRabbit
+@EnableScheduling
+public class DeliveryServiceConfig  {
 
+    @Autowired
+    public ConnectionFactory rabbitConnectionFactory;
     /**
      * Returns an Exchange for process sincronize message.
      *
@@ -26,224 +30,43 @@ public class DeliveryServiceConfig {
 
     @Bean
     public DirectExchange directExchange() {
-        return new DirectExchange("deliveryService.rpc");
-    }
-
-    /* Product Restaurant*/
-
-    /**
-     * Returns an Queue for process message about request ProductRestaurantById.
-     *
-     * @return the URL Queue
-     * @see    Queue
-     */
-
-    @Bean
-    public Queue queueProductRestaurantById() {
-        return new Queue("FDP.DeliveryMessageService:Request.ProductRestaurant");
+        return new DirectExchange("rpc.exchange");
     }
 
 
-
-    /**
-     * Returns an Binding for process message about request ProductRestaurantByRestaurantId.
-     *
-     * @param exchange
-     * @param queue
-     * @return the URL Binding
-     * @see    Binding
-     */
-
     @Bean
-    public Binding bindingProductRestaurantById(DirectExchange exchange, @Qualifier("queueProductRestaurantById") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.ProductRestaurant");
-    }
-
-
-    /**
-     * Returns an Queue for process message about request ProductRestaurantByRestaurantId.
-     *
-     * @return the URL Queue
-     * @see    Queue
-     */
-
-    @Bean
-    public Queue queueProductRestaurantByRestaurantId() {
-        return new Queue("FDP.DeliveryMessageService:Request.ProductRestaurantByRestaurantId");
-    }
-
-    /**
-     * Returns an Binding for process message about request ProductRestaurantByRestaurantId.
-     *
-     * @param exchange
-     * @param queue
-     * @return the URL Binding
-     * @see    Binding
-     */
-
-    @Bean
-    public Binding bindingProductRestaurant(DirectExchange exchange, @Qualifier("queueProductRestaurantByRestaurantId") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.ProductRestaurantByRestaurantId");
-    }
-
-
-
-
-    /**
-     * Returns an Queue for process message about request ProductRestaurantByRestaurantId.
-     *
-     * @return the URL Queue
-     * @see    Queue
-     */
-
-    @Bean
-    public Queue queueProductRestaurantByRestaurantCode() {
-        return new Queue("FDP.DeliveryMessageService:Request.ProductRestaurantByRestaurantCode");
-    }
-
-    /**
-     * Returns an Binding for process message about request ProductRestaurantByRestaurantCode.
-     *
-     * @param exchange
-     * @param queue
-     * @return the URL Binding
-     * @see    Binding
-     */
-
-    @Bean
-    public Binding bindingProductRestaurantByRestaurantCode(DirectExchange exchange, @Qualifier("queueProductRestaurantByRestaurantCode") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.ProductRestaurantByRestaurantCode");
-    }
-
-
-
-    /**
-     * Returns an Queue for process message about request AddProductRestaurant.
-     *
-     * @return the URL Queue
-     * @see    Queue
-     */
-
-    @Bean
-    public Queue queueAddProductRestaurant() {
-        return new Queue("FDP.DeliveryMessageService:Request.AddProductRestaurant");
-    }
-
-    /**
-     * Returns an Binding for process message about request AddProductRestaurant.
-     *
-     * @param exchange
-     * @param queue
-     * @return the URL Binding
-     * @see    Binding
-     */
-
-    @Bean
-    public Binding bindingAddProductRestaurant(DirectExchange exchange, @Qualifier("queueAddProductRestaurant") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.AddProductRestaurant");
-    }
-
-    /**
-     * Returns an Queue for process message about request UpdateProductRestaurant.
-     *
-     * @return the URL Queue
-     * @see    Queue
-     */
-
-    @Bean
-    public Queue queueUpdateProductRestaurant() {
-        return new Queue("FDP.DeliveryMessageService:Request.UpdateProductRestaurant");
-    }
-
-    /**
-     * Returns an Binding for process message about request UpdateProductRestaurant.
-     *
-     * @param exchange
-     * @param queue
-     * @return the URL Binding
-     * @see    Binding
-     */
-
-    @Bean
-    public Binding bindingUpdateProductRestaurant(DirectExchange exchange, @Qualifier("queueUpdateProductRestaurant") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.UpdateProductRestaurant");
-    }
-
-    /**
-     * Returns an Queue for process message about request DeleteProductRestaurant.
-     *
-     * @return the URL Queue
-     * @see    Queue
-     */
-
-    @Bean
-    public Queue queueDeleteProductRestaurant() {
-        return new Queue("FDP.DeliveryMessageService:Request.DeleteProductRestaurant");
-    }
-
-    /**
-     * Returns an Binding for process message about request DeleteProductRestaurant.
-     *
-     * @param exchange
-     * @param queue
-     * @return the URL Binding
-     * @see    Binding
-     */
-
-    @Bean
-    public Binding bindingDeleteProductRestaurant(DirectExchange exchange, @Qualifier("queueDeleteProductRestaurant") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.DeleteProductRestaurant");
-    }
-
-    /* End product Restaurant*/
-
-    @Bean
-    public Queue QueueRestaurantList() {
-        return new Queue("FDP.DeliveryMessageService:Request.RestaurantList");
+    public RabbitTemplate fixedReplyQRabbitTemplate() {
+        RabbitTemplate template = new RabbitTemplate(this.rabbitConnectionFactory);
+        template.setMessageConverter(producerJackson2MessageConverter());
+        template.setReceiveTimeout(10000);
+        template.setReplyTimeout(10000);
+        return template;
     }
 
     @Bean
-    public Binding bindingRestaurantList(DirectExchange exchange, @Qualifier("QueueRestaurantList") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.RestaurantList");
+    public CustomJackson2JsonMessageConverter producerJackson2MessageConverter() {
+        CustomDefaultJackson2JavaTypeMapper mapper = new CustomDefaultJackson2JavaTypeMapper();
+        CustomJackson2JsonMessageConverter json = new CustomJackson2JsonMessageConverter();
+        json.setJavaTypeMapper(mapper);
+
+        return json;
     }
 
     @Bean
-    public Queue QueueOrderList() {
-        return new Queue("FDP.DeliveryMessageService:Request.OrderList");
+    public MappingJackson2MessageConverter consumerJackson2MessageConverter() {
+        return new MappingJackson2MessageConverter();
     }
 
     @Bean
-    public Queue QueueOrder() {
-        return new Queue("FDP.DeliveryMessageService:Request.Order");
+    public DefaultClassMapper classMapper() {
+        DefaultClassMapper classMapper = new CustomDefaultClassMapper();
+        return classMapper;
     }
 
     @Bean
-    public Queue QueueAddOrder() {
-        return new Queue("FDP.DeliveryMessageService:Request.AddOrder");
-    }
-
-    @Bean
-    public Queue QueueUpdateOrder() {
-        return new Queue("FDP.DeliveryMessageService:Request.UpdateOrder");
-    }
-
-    @Bean
-    public Binding bindingOrderList(DirectExchange exchange, @Qualifier("QueueOrderList") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.OrderList");
-    }
-
-    @Bean
-    public Binding bindingOrder(DirectExchange exchange, @Qualifier("QueueOrder") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.Order");
-    }
-
-    @Bean
-    public Binding bindingAddOrder(DirectExchange exchange, @Qualifier("QueueAddOrder") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.AddOrder");
-    }
-
-    @Bean
-    public Binding bindingUpdateOrder(DirectExchange exchange, @Qualifier("QueueUpdateOrder") Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("FDP.DeliveryMessageService:Request.UpdateOrder");
+    public DefaultMessageHandlerMethodFactory messageHandlerMethodFactory() {
+        DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
+        factory.setMessageConverter(consumerJackson2MessageConverter());
+        return factory;
     }
 }
