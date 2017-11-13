@@ -141,13 +141,13 @@ public class CustomJackson2JsonMessageConverter extends Jackson2JsonMessageConve
 
         if (getClassMapper() == null) {
             getJavaTypeMapper().fromJavaType(mapper.constructType(objectToConvert.getClass()),messageProperties);
-            String type = NormalizeClass(mapper.constructType(objectToConvert.getClass()).getRawClass().getName());
-            messageProperties.setType(type);
+            String type = mapper.constructType(objectToConvert.getClass()).getRawClass().getName();
+            messageProperties.setType(NormalizeClass(type));
         }
         else {
             getClassMapper().fromClass(objectToConvert.getClass(),messageProperties);
-            String type = NormalizeClass(objectToConvert.getClass().getName());
-            messageProperties.setType(type);
+            String type = (objectToConvert.getClass().getName());
+            messageProperties.setType(NormalizeClass(type));
         }
 
         messageProperties.setCorrelationId(bytes1);

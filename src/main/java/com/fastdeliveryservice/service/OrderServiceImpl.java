@@ -71,11 +71,10 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
-    public int add(int userId, double amount, Date confirmationDate, String deliveryType, String address, String city, String phoneNumber, String email, int restaurantId) {
+    public int add(int userId, double amount, String deliveryType, String address, String city, String phoneNumber, String email, int restaurantId) {
 
-        FDP.OrderService.MessageDirectory.Request.ConfirmOrder request = new FDP.OrderService.MessageDirectory.Request.ConfirmOrder(userId,amount,confirmationDate,deliveryType,address,city,phoneNumber,email,restaurantId);
-
-        ConfirmOrder result = (ConfirmOrder) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService:Request.ConfirmOrder", request);
+        FDP.OrderService.MessageDirectory.Request.ConfirmOrder request = new FDP.OrderService.MessageDirectory.Request.ConfirmOrder(userId,amount,deliveryType,address,city,phoneNumber,email,restaurantId);
+        ConfirmOrder result = (ConfirmOrder) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.MessageDirectory:Request.ConfirmOrder", request);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Order received...", result.getId());

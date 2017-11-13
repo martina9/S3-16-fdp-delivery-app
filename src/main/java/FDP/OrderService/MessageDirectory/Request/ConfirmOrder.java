@@ -19,7 +19,6 @@ public class ConfirmOrder
     public List<Product> products;
     private int userId;
     private double amount;
-    private Date confirmationDate;
     private int restaurantId;
 
     public ConfirmOrder()
@@ -35,10 +34,9 @@ public class ConfirmOrder
         this.restaurantId = restaurantId;
     }
 
-    public ConfirmOrder(int userId, double amount, Date confirmationDate, String deliveryType, String address, String city, String phoneNumber, String email,int restaurantId) {
+    public ConfirmOrder(int userId, double amount, String deliveryType, String address, String city, String phoneNumber, String email,int restaurantId) {
         this.userId = userId;
         this.amount = amount;
-        this.confirmationDate = confirmationDate;
         this.deliveryType = deliveryType;
         this.address = address;
         this.city = city;
@@ -61,14 +59,6 @@ public class ConfirmOrder
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public Date getConfirmationDate() {
-        return confirmationDate;
-    }
-
-    public void setConfirmationDate(Date confirmationDate) {
-        this.confirmationDate = confirmationDate;
     }
 
     public String getDeliveryType() {
