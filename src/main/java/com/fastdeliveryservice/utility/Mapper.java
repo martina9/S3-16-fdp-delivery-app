@@ -31,7 +31,6 @@ public class Mapper {
         view.setAddress(orderInfo.getAddress());
         view.setAmount(orderInfo.getAmount());
         view.setCity(orderInfo.getCity());
-        view.setConfirmationDate(orderInfo.getConfirmationDate());
         view.setUserId(orderInfo.getUserId());
         view.setCity(orderInfo.getCity());
         view.setEmail(orderInfo.getEmail());

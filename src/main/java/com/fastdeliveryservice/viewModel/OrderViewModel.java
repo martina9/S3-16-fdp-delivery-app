@@ -19,7 +19,6 @@ public class OrderViewModel {
     private int userId;
     private int restaurantId;
     private double amount;
-    private Date confirmationDate;
     private int id;
 
     public int getId() {
@@ -38,7 +37,6 @@ public class OrderViewModel {
         this.email = email;
         this.userId = userId;
         this.amount = amount;
-        this.confirmationDate = confirmationDate;
         this.id = id;
     }
 
@@ -50,7 +48,6 @@ public class OrderViewModel {
         this.email = email;
         this.userId = userId;
         this.amount = amount;
-        this.confirmationDate = confirmationDate;
         this.id = id;
     }
 
@@ -121,14 +118,6 @@ public class OrderViewModel {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public Date getConfirmationDate() {
-        return confirmationDate;
-    }
-
-    public void setConfirmationDate(Date confirmationDate) {
-        this.confirmationDate = confirmationDate;
     }
 
     public int getRestaurantId() {

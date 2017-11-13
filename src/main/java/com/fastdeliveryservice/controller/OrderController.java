@@ -7,7 +7,6 @@ import com.fastdeliveryservice.viewModel.OrderViewModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 
@@ -73,7 +72,7 @@ public class OrderController {
     @RequestMapping(value = "/orders/user", method = RequestMethod.POST)
     public ResponseEntity<Void> addOrder(@RequestBody OrderViewModel order) {
 
-      int id =  orderServiceImpl.add(order.getUserId(),order.getAmount(), order.getDeliveryType(), order.getAddress(), order.getCity(), order.getPhoneNumber(), order.getEmail(),order.getRestaurantId());
+      int id =  orderServiceImpl.add(order.getUserId(),order.getAmount(), order.getDeliveryType(), order.getAddress(), order.getCity(), order.getPhoneNumber(), order.getEmail(),order.getRestaurantId(), order.getProducts());
       return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 

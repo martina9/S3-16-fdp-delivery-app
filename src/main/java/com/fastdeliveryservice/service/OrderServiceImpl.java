@@ -1,6 +1,7 @@
 package com.fastdeliveryservice.service;
 
 import FDP.OrderService.MessageDirectory.Response.ConfirmOrder;
+import FDP.OrderService.MessageDirectory.Shared.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
@@ -10,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Martina
@@ -71,9 +73,10 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
-    public int add(int userId, double amount, String deliveryType, String address, String city, String phoneNumber, String email, int restaurantId) {
+    public int add(int userId, double amount, String deliveryType, String address, String city, String phoneNumber, String email, int restaurantId,List<Product> products) {
 
         FDP.OrderService.MessageDirectory.Request.ConfirmOrder request = new FDP.OrderService.MessageDirectory.Request.ConfirmOrder(userId,amount,deliveryType,address,city,phoneNumber,email,restaurantId);
+        request.setProducts(products);
         ConfirmOrder result = (ConfirmOrder) rabbitTemplate.convertSendAndReceive(directExchange.getName(), "FDP.OrderService.MessageDirectory:Request.ConfirmOrder", request);
 
         if (logger.isDebugEnabled()) {

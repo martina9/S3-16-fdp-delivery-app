@@ -8,13 +8,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Product
 {
+    private int quantity;
+    private int productId;
+
     public Product() {
     }
 
     public Product(int quantity, int productId) {
         this.quantity = quantity;
         this.productId = productId;
-
     }
 
     public int getQuantity() {
@@ -33,6 +35,4 @@ public class Product
         this.productId = productId;
     }
 
-    private int quantity;
-    private int productId;
 }
