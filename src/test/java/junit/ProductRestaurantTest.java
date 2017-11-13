@@ -17,11 +17,14 @@ import org.junit.Test;
 
 
 public class ProductRestaurantTest {
+    private final String  PRODUCT_RESTAURANT_SERVICE_API = "http://localhost:8089/FastDeliveryPizza/api/products/restaurant/";
+    private final String  PRODUCT_RESTAURANT_PRODUCT_SERVICE_API = "http://localhost:8089/FastDeliveryPizza/api/products/restaurant/product/";
+
     @Test
     public void getProductRestaurantById() throws IOException {
 
         // Given
-        HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
+        HttpUriRequest request = new HttpGet( PRODUCT_RESTAURANT_SERVICE_API);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
@@ -34,7 +37,7 @@ public class ProductRestaurantTest {
     public void getAllProductsRestaurantByRestaurantId() throws IOException {
 
         // Given
-        HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
+        HttpUriRequest request = new HttpGet( PRODUCT_RESTAURANT_PRODUCT_SERVICE_API);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
@@ -43,55 +46,4 @@ public class ProductRestaurantTest {
         Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), (HttpStatus.SC_NOT_FOUND));
     }
 
-    @Test
-    public void getAllProductsRestaurantByRestaurantCode() throws IOException {
-
-        // Given
-        HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
-
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
-
-        // Then
-        Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), (HttpStatus.SC_NOT_FOUND));
-    }
-
-    @Test
-    public void add() throws IOException {
-
-        // Given
-        HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
-
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
-
-        // Then
-        Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), (HttpStatus.SC_NOT_FOUND));
-    }
-
-    @Test
-    public void update() throws IOException {
-
-        // Given
-        HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
-
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
-
-        // Then
-        Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), (HttpStatus.SC_NOT_FOUND));
-    }
-
-    @Test
-    public void delete() throws IOException {
-
-        // Given
-        HttpUriRequest request = new HttpGet( "https://api.github.com/users/");
-
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
-
-        // Then
-        Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), (HttpStatus.SC_NOT_FOUND));
-    }
 }
