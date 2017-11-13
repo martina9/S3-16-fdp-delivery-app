@@ -4,8 +4,6 @@
         <div id="form-container">
             <div class="page-header text-center">
                 <h2>User Order</h2>
-                <div class="alert alert-success" role="alert" ng-if="orctrl.successMessage">{{orctrl.successMessage}}</div>
-                <div class="alert alert-danger" role="alert" ng-if="orctrl.errorMessage">{{orctrl.errorMessage}}</div>
                 <!-- the links to our nested states using relative paths -->
                 <!-- add the active class if the state matches our ui-sref -->
                 <div id="status-buttons" class="text-center">

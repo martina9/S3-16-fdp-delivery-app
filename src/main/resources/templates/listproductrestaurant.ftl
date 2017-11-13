@@ -38,9 +38,9 @@
 
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <label class="col-md-2 control-lable" for="product">Category</label>
+                        <label class="col-md-2 control-lable" for="product">Product</label>
                         <div class="col-md-7">
-                            <select size="6" name="product" ng-model="prctrl.productRestaurant.productId" ng-options="product.id as product.name for product in prctrl.getAllProducts() track by product.id">
+                            <select class="form-control" name="product" ng-model="prctrl.productRestaurant.productId" ng-options="product.id as product.name for product in prctrl.getAllProducts() track by product.id">
                                 <option value="">--Select Product--</option>
                             </select>
                         </div>

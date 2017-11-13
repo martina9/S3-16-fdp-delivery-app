@@ -93,7 +93,7 @@
                             <#--<a href="/FastDeliveryPizza/#/restaurant" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-user"></span></a>-->
                         <#--</li>-->
                         <li class="dropdown2">
-                            <a href="/FastDeliveryPizza/#/product" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-lock"></span></a>
+                            <a href="/FastDeliveryPizza/#/productrestaurant" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-lock"></span></a>
                         </li>
                         <li class="dropdown2">
                             <a href="/FastDeliveryPizza/#/userorderpartials/address" class="dropdown-toggle" role="button" aria-expanded="true"><span class="glyphicon glyphicon-shopping-cart"></span></a>

@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <link href="css/bootstrap-min.css" rel="stylesheet"/>
-    </head>
 
-    <body>
+    <div class="alert alert-success" role="alert" ng-if="orctrl.successMessage">{{orctrl.successMessage}}</div>
+    <div class="alert alert-danger" role="alert" ng-if="orctrl.errorMessage">{{orctrl.errorMessage}}</div>
         <div class="form-group">
             <i class="fa fa-key"></i>
             <select class="form-control" ng-model="octrl.selectedRestaurant"  ng-options="restaurant.id as restaurant.name for restaurant in octrl.getAllRestaurants() track by restaurant.id" ng-change="octrl.searchProductRestaurantLive(octrl.selectedRestaurant)">
                 <option value=""><--Select Restaurant--></option>
             </select>
         </div>
-
-        <#--<div class="form-group">-->
-            <#--<label for="restaurant">Restaurant</label>-->
-            <#--<div class="col-md-7">-->
-                <#--<select size="6" name="restaurant" ng-model="octrl.selectedRestaurant"  ng-options="restaurant.id as restaurant.name for restaurant in octrl.getAllRestaurants() track by restaurant.id" ng-change="octrl.searchProductRestaurantLive(octrl.selectedRestaurant)">-->
-                    <#--<option value="">--Select Restaurant--</option>-->
-                <#--</select>-->
-            <#--</div>-->
-        <#--</div>-->
 
         <div class="panel panel-default">
             <!-- Default panel contents -->
@@ -63,6 +50,4 @@
         </div>
 
         <script src="js/lib/bootstrap-min.js" ></script>
-    </body>
-</html>
 
