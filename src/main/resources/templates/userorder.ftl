@@ -4,6 +4,8 @@
         <div id="form-container">
             <div class="page-header text-center">
                 <h2>User Order</h2>
+                <div class="alert alert-success" role="alert" ng-if="orctrl.successMessage">{{orctrl.successMessage}}</div>
+                <div class="alert alert-danger" role="alert" ng-if="orctrl.errorMessage">{{orctrl.errorMessage}}</div>
                 <!-- the links to our nested states using relative paths -->
                 <!-- add the active class if the state matches our ui-sref -->
                 <div id="status-buttons" class="text-center">
@@ -13,7 +15,7 @@
             </div>
 
             <!-- use ng-submit to catch the form submission and use our Angular function -->
-            <form id="signup-form" ng-submit="octrl.confirmOrder()">
+            <form id="signup-form" name="myForm" ng-submit="octrl.confirmOrder()">
 
                 <!-- our nested state views will be injected here -->
                 <div id="form-views" ui-view></div>

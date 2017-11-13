@@ -35,8 +35,6 @@ angular.module('fdpApp').controller('OrderController',
         }
 
         function confirmOrder(){
-            console.log('selectedRestaurant',self.selectedRestaurant)
-            console.log('ids ',self.ids);
             var list = self.getAllProductRestaurants();
 
             var products = [];
@@ -48,22 +46,19 @@ angular.module('fdpApp').controller('OrderController',
                 email :self.order.email,
                 userId:urls.USER_ID,
                 restaurantId:self.selectedRestaurant,
-                confirmationDate:new Date(),
                 products: new Array()
             };
 
             angular.forEach(list, function(value, key) {
                 angular.forEach(self.ids, function (selfValue, selfKe) {
                     if (value.id == selfValue) {
-                        var product = [{quantity:value.quantity},{productId:value.productId}];
+                        var product = {quantity:value.quantity,productId:value.productId};
                         orderToConfirm.products.push(product);
                     }
                 });
             });
 
             self.createOrder(orderToConfirm);
-            console.log('orderToConfirm',orderToConfirm);
-            console.log('userproductRestaurants ',  self.userproductRestaurants);
         }
 
         function searchProductRestaurantLive(restaurantId) {
@@ -119,7 +114,7 @@ angular.module('fdpApp').controller('OrderController',
                         self.errorMessage='';
                         self.done = true;
                         self.order={};
-                        $scope.myForm.$setPristine();
+                        //$scope.myForm.$setPristine();
                     },
                     function (errResponse) {
                         console.error('Error while creating Order');

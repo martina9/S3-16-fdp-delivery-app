@@ -14,6 +14,8 @@
     <div class="form-group">
         <i class="fa fa-lock"></i>
         <label style="color:white" for="oDeliveryType">Delivery Type</label>
+        <input type="radio" ng-model="octrl.order.deliveryType" value="DeliveryHome">
+        <input type="radio" ng-model="octrl.order.deliveryType" value="Pickup">
         <input type="text" ng-model="octrl.order.deliveryType" id="deliveryType" class="form-control" placeholder="Enter the DeliveryType" />
     </div>
     <div class="form-group">

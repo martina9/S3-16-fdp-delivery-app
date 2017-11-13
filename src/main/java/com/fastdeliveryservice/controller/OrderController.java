@@ -73,7 +73,7 @@ public class OrderController {
     @RequestMapping(value = "/orders/user", method = RequestMethod.POST)
     public ResponseEntity<Void> addOrder(@RequestBody OrderViewModel order) {
 
-      int id =  orderServiceImpl.add(order.getUserId(),order.getAmount(),order.getConfirmationDate(), order.getDeliveryType(), order.getAddress(), order.getCity(), order.getPhoneNumber(), order.getEmail(),order.getRestaurantId());
+      int id =  orderServiceImpl.add(order.getUserId(),order.getAmount(), order.getDeliveryType(), order.getAddress(), order.getCity(), order.getPhoneNumber(), order.getEmail(),order.getRestaurantId());
       return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
