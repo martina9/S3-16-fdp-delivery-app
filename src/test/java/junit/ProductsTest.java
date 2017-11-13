@@ -21,7 +21,6 @@ import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 public class ProductsTest {
-
      private final String  BASE_URL = "http://localhost:8089/FastDeliveryPizza/api/";
      private final String  PRODUCT_SERVICE_API =  "http://localhost:8089/FastDeliveryPizza/api/products/";
      private final String  RESTAURANT_SERVICE_API = "http://localhost:8089/FastDeliveryPizza/api/restaurants/";
@@ -36,7 +35,7 @@ public class ProductsTest {
     public void getProductsById() throws IOException {
 
         // Given
-        HttpUriRequest request = new HttpGet( PRODUCT_SERVICE_API);
+        HttpUriRequest request = new HttpGet(PRODUCT_SERVICE_API);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute( request );
