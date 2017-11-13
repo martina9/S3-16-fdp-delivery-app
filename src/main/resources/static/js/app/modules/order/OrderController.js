@@ -52,7 +52,7 @@ angular.module('fdpApp').controller('OrderController',
             angular.forEach(list, function(value, key) {
                 angular.forEach(self.ids, function (selfValue, selfKe) {
                     if (value.id == selfValue) {
-                        var product = {quantity:value.quantity,productId:value.productId};
+                        var product = {quantity:parseInt(value.quantity),productId:value.productId};
                         orderToConfirm.products.push(product);
                     }
                 });
